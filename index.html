@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cyber Intelligence Question Bank — QB 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #161b25;
+    --surface2:  #1e2536;
+    --border:    #2a3349;
+    --text:      #dde3f0;
+    --muted:     #6b7a9e;
+    --accent:    #4f8ef7;
+    --green:     #2ecc71;
+    --red:       #e74c3c;
+    --green-bg:  rgba(46,204,113,.12);
+    --red-bg:    rgba(231,76,60,.12);
+    --radius:    14px;
+    --mono:      'Space Mono', monospace;
+    --sans:      'Syne', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 60px;
+  }
+  .header {
+    width: 100%;
+    max-width: 780px;
+    padding: 36px 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .header .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    text-align: center;
+  }
+  .header h1 span { color: var(--accent); }
+  .progress-wrap {
+    width: 100%;
+    max-width: 780px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .progress-meta .score-live { color: var(--green); }
+  .bar-bg {
+    width: 100%;
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 99px;
+    transition: width .45s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .chapter-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .15em;
+    color: var(--accent);
+    background: rgba(79,142,247,.1);
+    border: 1px solid rgba(79,142,247,.25);
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+  .card {
+    width: 100%;
+    max-width: 780px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 36px 40px 32px;
+    position: relative;
+    animation: fadeSlideIn .35s ease both;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .q-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    letter-spacing: .1em;
+  }
+  .q-text {
+    font-size: clamp(16px, 2.5vw, 18px);
+    font-weight: 700;
+    line-height: 1.55;
+    margin-bottom: 28px;
+    letter-spacing: -.01em;
+  }
+  .options { display: flex; flex-direction: column; gap: 11px; }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color .18s, background .18s, transform .12s;
+    position: relative;
+    overflow: hidden;
+  }
+  .opt:hover:not(.locked) {
+    border-color: var(--accent);
+    background: rgba(79,142,247,.07);
+    transform: translateX(3px);
+  }
+  .opt.locked { cursor: default; }
+  .opt-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background .18s, border-color .18s, color .18s;
+  }
+  .opt-text {
+    font-size: 14px;
+    line-height: 1.45;
+    flex: 1;
+  }
+  .opt-icon {
+    font-size: 18px;
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .opt.correct {
+    border-color: var(--green);
+    background: var(--green-bg);
+    animation: pulse-green .35s ease;
+  }
+  .opt.correct .opt-label {
+    background: var(--green);
+    border-color: var(--green);
+    color: #000;
+  }
+  .opt.correct .opt-icon { opacity: 1; color: var(--green); }
+  .opt.wrong {
+    border-color: var(--red);
+    background: var(--red-bg);
+    animation: pulse-red .35s ease;
+  }
+  .opt.wrong .opt-label {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+  .opt.wrong .opt-icon { opacity: 1; color: var(--red); }
+  @keyframes pulse-green {
+    0%   { box-shadow: 0 0 0 0 rgba(46,204,113,.5); }
+    70%  { box-shadow: 0 0 0 10px rgba(46,204,113,0); }
+    100% { box-shadow: 0 0 0 0 rgba(46,204,113,0); }
+  }
+  @keyframes pulse-red {
+    0%   { box-shadow: 0 0 0 0 rgba(231,76,60,.5); }
+    70%  { box-shadow: 0 0 0 10px rgba(231,76,60,0); }
+    100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); }
+  }
+  .anchor {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: rgba(79,142,247,.07);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    display: none;
+    animation: fadeSlideIn .3s ease both;
+  }
+  .anchor strong {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing:.1em;
+    display:block;
+    margin-bottom:4px;
+  }
+  .timer-bar {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 0 0 var(--radius) var(--radius);
+    transition: width 1.6s linear;
+  }
+  .results {
+    width: 100%;
+    max-width: 780px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 52px 40px;
+    text-align: center;
+    animation: fadeSlideIn .4s ease both;
+    display: none;
+  }
+  .results .trophy { font-size: 62px; margin-bottom: 20px; display:block; }
+  .results h2 { font-size: 28px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 10px; }
+  .results .score-big {
+    font-family: var(--mono);
+    font-size: clamp(52px,10vw,80px);
+    font-weight: 700;
+    line-height: 1;
+    margin: 24px 0;
+  }
+  .results .score-big span { color: var(--accent); }
+  .results .grade { font-size: 16px; color: var(--muted); margin-bottom: 32px; }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 12px;
+  }
+  .stat-box .val {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    display: block;
+  }
+  .stat-box .val.green { color: var(--green); }
+  .stat-box .val.red   { color: var(--red);   }
+  .stat-box .val.blue  { color: var(--accent); }
+  .stat-box .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; display: block; letter-spacing: .07em; }
+  .btn-restart {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 36px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: .03em;
+    transition: background .18s, transform .12s;
+  }
+  .btn-restart:hover { background: #6aa0ff; transform: translateY(-1px); }
+  #chapter-select {
+    width: 100%;
+    max-width: 780px;
+    animation: fadeSlideIn .35s ease both;
+  }
+  #chapter-select h2 {
+    font-size: clamp(20px,4vw,26px);
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -.02em;
+  }
+  #chapter-select p { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .ch-card {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color .18s, background .18s, transform .12s;
+    position: relative;
+  }
+  .ch-card:hover { border-color: var(--accent); background: rgba(79,142,247,.07); transform: translateY(-2px); }
+  .ch-card .ch-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 6px;
+    letter-spacing: .12em;
+  }
+  .ch-card .ch-title { font-size: 14px; font-weight: 700; line-height: 1.4; }
+  .ch-card .ch-count { font-size: 12px; color: var(--muted); margin-top: 8px; font-family: var(--mono); }
+  .ch-card.selected { border-color: var(--accent); background: rgba(79,142,247,.12); }
+  .ch-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 12px; right: 14px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .btn-start-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 32px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .18s, transform .12s;
+    margin-right: 12px;
+    margin-top: 4px;
+  }
+  .btn-start-all:hover { background: #6aa0ff; transform: translateY(-1px); }
+  .btn-start-sel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .18s, transform .12s;
+    margin-top: 4px;
+  }
+  .btn-start-sel:hover { background: rgba(79,142,247,.1); transform: translateY(-1px); }
+  @media (max-width: 560px) {
+    .card { padding: 24px 20px 20px; }
+    .results { padding: 36px 22px; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <span class="eyebrow">▸ Interactive Study Tool</span>
+  <h1>Cyber Intelligence <span>QB 2026</span></h1>
+</div>
+
+<div id="chapter-select">
+  <h2>Select Lectures</h2>
+  <p>Choose which lectures to include, or start all at once.</p>
+  <div class="chapter-grid" id="chapterGrid"></div>
+  <button class="btn-start-all" onclick="startQuiz('all')">▶ Start All Lectures</button>
+  <button class="btn-start-sel" onclick="startQuiz('selected')">Start Selected</button>
+</div>
+
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-meta">
+    <span id="progressLabel">Question 1 of 0</span>
+    <span class="score-live" id="scoreLive">Score: 0</span>
+  </div>
+  <div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
+</div>
+
+<div id="quizArea" style="display:none">
+  <div class="chapter-badge" id="chapterBadge">Lecture 1</div>
+  <div class="card" id="card">
+    <div class="q-number" id="qNumber">Q1</div>
+    <div class="q-text" id="qText"></div>
+    <div class="options" id="options"></div>
+    <div class="anchor" id="anchor"><strong>📌 MEMORY ANCHOR</strong><span id="anchorText"></span></div>
+    <div class="timer-bar" id="timerBar"></div>
+  </div>
+</div>
+
+<div class="results" id="results">
+  <span class="trophy" id="trophy">🎯</span>
+  <h2 id="resultsTitle">Quiz Complete!</h2>
+  <p class="grade" id="resultsGrade"></p>
+  <div class="score-big"><span id="scorePercent">0</span>%</div>
+  <div class="stats-grid">
+    <div class="stat-box"><span class="val green" id="statCorrect">0</span><span class="lbl">Correct</span></div>
+    <div class="stat-box"><span class="val red"   id="statWrong">0</span><span class="lbl">Wrong</span></div>
+    <div class="stat-box"><span class="val blue"  id="statTotal">0</span><span class="lbl">Total Q's</span></div>
+  </div>
+  <button class="btn-restart" onclick="resetToMenu()">↩ Back to Menu</button>
+</div>
+
+<script>
+const CHAPTERS = [
+  {
+    name: "Lecture 1 — Introduction to Cyber Intelligence",
+    questions: [
+      {q:"What is the primary objective of cyber intelligence?",opts:["Offensive hacking","Gathering, analyzing, and using information to predict and prevent cyber threats","Promoting social media awareness","Developing hardware security"],correct:1,anchor:"Cyber intelligence is fundamentally about gathering, analyzing, and using information to predict and prevent cyber threats — not offensive or hardware tasks."},
+      {q:"Cyber intelligence involves collecting data related to:",opts:["social media trends","business analytics","Cyber threats, vulnerabilities, and risks","political campaigns"],correct:2,anchor:"The core data of cyber intelligence is cyber threats, vulnerabilities, and risks — not marketing or political data."},
+      {q:"Which of the following is not a core domain of cyber intelligence?",opts:["human","digital","Economic.","electronic"],correct:2,anchor:"The three core domains are Human, Digital, and Electronic. Economic is not a domain of cyber intelligence."},
+      {q:"What does the digital domain in cyber intelligence focus on?",opts:["Physical security","Malware analysis and network security","Psychological profiling","Economic intelligence"],correct:1,anchor:"The digital domain covers malware analysis and network security — not physical or economic concerns."},
+      {q:"The electronic domain in cyber intelligence deals with:",opts:["Network security and encryption","Hardware security, telecommunications, and signals intelligence","Ethical hacking","Behavioral analytics"],correct:1,anchor:"Electronic domain = hardware security, telecommunications, and signals intelligence (SIGINT)."},
+      {q:"Which of the following is a key function of behavioral analytics in cyber intelligence?",opts:["data encryption","identifying security patches","Predicting cybercriminal activities","managing cloud storage"],correct:2,anchor:"Behavioral analytics predicts cybercriminal activities by identifying unusual patterns."},
+      {q:"What is the primary goal of threat intelligence in cyber intelligence?",opts:["Identifying cyber adversaries and their tactics","Tracking financial transactions","Promoting software updates","Conducting cyber awareness campaigns"],correct:0,anchor:"Threat intelligence targets identifying cyber adversaries and their tactics — TTPs (Tactics, Techniques, Procedures)."},
+      {q:"The cyber intelligence lifecycle consists of:",opts:["security policies","firewall implementation","Intelligence collection, analysis, and dissemination","social media monitoring"],correct:2,anchor:"The lifecycle: Collection → Analysis → Dissemination. These three phases define the full intelligence cycle."},
+      {q:"Threat analysis in cyber intelligence involves:",opts:["Understanding attack vectors and vulnerabilities","Developing new hardware","Conducting market research","Designing user interfaces"],correct:0,anchor:"Threat analysis = understanding attack vectors and vulnerabilities to predict and counter threats."},
+      {q:"What is the role of insider threat intelligence?",opts:["Preventing external cyberattacks","Analyzing cybercriminal behavior.","Managing public relations","Regulating cloud computing services"],correct:1,anchor:"Insider threat intelligence focuses on analyzing cybercriminal behavior, especially from within an organization."},
+      {q:"Which historical event significantly influenced the early development of cyber intelligence?",opts:["The Cold War.","The Industrial Revolution","The Renaissance","World War I"],correct:0,anchor:"The Cold War drove nations to develop signals and cyber intelligence capabilities to spy on adversaries."},
+      {q:"Who were the first adopters of cyber intelligence?",opts:["nasa","the united nations","Intelligence and military agencies","the red cross"],correct:2,anchor:"Intelligence and military agencies were first — they had the resources and need to develop early cyber intelligence programs."},
+      {q:"Why has cyber intelligence become essential in modern security?",opts:["The decline of traditional espionage","The increasing sophistication of cyber threats.","The rise of artificial intelligence","The elimination of traditional security methods"],correct:1,anchor:"The increasing sophistication of cyber threats demands proactive intelligence to stay ahead of attackers."},
+      {q:"How does cyber intelligence contribute to national security?",opts:["Protecting citizens from online fraud","Identifying and mitigating cyber threats targeting critical infrastructure","Promoting e-commerce","Regulating software development"],correct:1,anchor:"National security relies on identifying and mitigating cyber threats to critical infrastructure like power grids, water systems, etc."},
+      {q:"What differentiates cyber intelligence from cybersecurity?",opts:["Cyber intelligence focuses on predicting threats, while cybersecurity focuses on defense and mitigation","Cyber intelligence is only concerned with military operations","Cybersecurity deals only with software security","Cyber intelligence involves physical security measures"],correct:0,anchor:"Key distinction: Cyber intelligence = PREDICT; Cybersecurity = DEFEND and MITIGATE."},
+      {q:"What are key components of a cyber-intelligence framework?",opts:["Data collection","Threat analysis","Incident response","All of the above"],correct:3,anchor:"A complete framework requires all three: data collection, threat analysis, AND incident response."},
+      {q:"Cyber intelligence helps prevent which threats?",opts:["Ransomeware","Phising","Insider threats","All of the above"],correct:3,anchor:"Cyber intelligence helps prevent ransomware, phishing, AND insider threats — all categories benefit from proactive intelligence."},
+      {q:"Which cybersecurity measures rely on cyber intelligence?",opts:["Endpoint security","Network security","Cloud security","All of the above"],correct:3,anchor:"Endpoint, network, and cloud security all leverage cyber intelligence for threat-aware defense."},
+      {q:"Cyber intelligence is used in which sectors?",opts:["Finance","Healthcare","Government","All of the above"],correct:3,anchor:"Finance, healthcare, and government are all major consumers of cyber intelligence."},
+      {q:"Which factors influence cyber intelligence effectiveness?",opts:["Data accuracy","Timely analysis","Effective collaboration","All of the above"],correct:3,anchor:"Effectiveness requires all three: accurate data, timely analysis, AND effective collaboration between teams."},
+      {q:"What major privacy law regulates data protection in the European Union?",opts:["GDPR.","HIPAA","CISA","PATRIOT Act"],correct:0,anchor:"GDPR (General Data Protection Regulation) is the EU's primary data protection law, enforcing strict rules on data collection."},
+      {q:"What are the ethical concerns related to cyber intelligence?",opts:["Cybersecurity training","Data privacy and surveillance.","Developing new software","Creating digital advertisements"],correct:1,anchor:"Cyber intelligence ethics centers on data privacy and surveillance — the tension between security and civil liberties."},
+      {q:"How does the Budapest Convention impact cybercrime regulations?",opts:["Regulate AI development","Provide a legal framework for combating cybercrime internationally","Control social media activities","Promote cloud computing"],correct:1,anchor:"The Budapest Convention is the first international treaty on cybercrime, providing a cross-border legal framework."},
+      {q:"What U S legislation expanded surveillance powers for intelligence agencies?",opts:["GDPR","USA PATRIOT Act.","The Digital Services Act","The Espionage Act"],correct:1,anchor:"The USA PATRIOT Act (2001) dramatically expanded surveillance powers for US intelligence agencies post-9/11."},
+      {q:"Why is cross-border intelligence sharing difficult?",opts:["Differences in legal frameworks across countries","The rapid evolution of cybersecurity tools","The lack of available intelligence","The excessive transparency in threat data"],correct:0,anchor:"Different countries have different laws, regulations, and definitions of cybercrime — making legal cross-border sharing complex."},
+      {q:"What motivates cybercriminal organizations?",opts:["Public awareness campaigns","Financial gain.","Promoting cybersecurity ethics","Providing cybersecurity training"],correct:1,anchor:"Financial gain is the primary motivator for most cybercriminal organizations — ransomware, fraud, data theft all generate revenue."},
+      {q:"What is an Advanced Persistent Threat (APT)?",opts:["A short-term, low-impact attack","A long-term, stealthy cyber campaign","An accidental data leak","A physical security breach"],correct:1,anchor:"APT = long-term, stealthy campaign. Nation-state actors often use APTs to maintain persistent access for months or years."},
+      {q:"What is the primary function of ransomware?",opts:["Spying on user activity","Encrypting files and demanding payment","Slowing down network speed","Exploiting cloud storage"],correct:1,anchor:"Ransomware encrypts victim files and demands payment (ransom) for the decryption key."},
+      {q:"Why are critical infrastructure sectors targeted by cybercriminals?",opts:["They have weak security policies","They provide essential services and have high ransom potential","They have outdated software","They offer financial incentives for hackers"],correct:1,anchor:"Critical infrastructure (power, water, hospitals) provides essential services — disruption creates maximum pressure to pay ransoms."},
+      {q:"What is an insider threat in cybersecurity?",opts:["A malicious software attack","A threat originating from within an organization","A phishing scam targeting executives","A type of firewall breach"],correct:1,anchor:"Insider threats come from within — employees, contractors, or partners who misuse their access, intentionally or accidentally."},
+      {q:"How does social engineering impact cybersecurity?",opts:["By using technical vulnerabilities to hack systems","By manipulating individuals into divulging confidential information","By improving password security","By enhancing AI-driven security measures"],correct:1,anchor:"Social engineering bypasses technical defenses by manipulating people — the human element is often the weakest link."},
+      {q:"What is Cybercrime-as-a-Service (CaaS)?",opts:["A legal cybersecurity training service","A platform offering hacking tools and services for cybercriminals","A government-sponsored cybersecurity initiative","A method of preventing cyber attacks"],correct:1,anchor:"CaaS lowers the barrier to entry — criminals can rent ransomware, DDoS tools, or phishing kits without technical skills."},
+      {q:"How do cyber espionage groups operate?",opts:["By selling cybersecurity software to governments","By gathering intelligence through hacking and surveillance","By conducting ethical hacking to improve security","By launching random cyber attacks without strategy"],correct:1,anchor:"Cyber espionage groups use strategic hacking and surveillance to gather classified or proprietary intelligence."},
+      {q:"What role does digital forensics play in cyber intelligence?",opts:["It helps analyze and recover data from compromised systems","It prevents phishing attacks","It automates cybersecurity defenses","It eliminates the need for antivirus software"],correct:0,anchor:"Digital forensics analyzes and recovers data from compromised systems — essential for post-incident investigation."},
+      {q:"What does OSINT stand for in cyber intelligence?",opts:["Open-Source Intelligence.","Offensive Security Integration","Online Security Information Network","Operational Signals Intelligence"],correct:0,anchor:"OSINT = Open-Source Intelligence — gathering info from publicly available sources like social media, news, public records."},
+      {q:"Why is malware analysis crucial in cyber intelligence?",opts:["To understand how malware works and develop countermeasures","To promote cybersecurity awareness","To encourage businesses to invest in firewalls","To create stronger passwords"],correct:0,anchor:"Malware analysis reveals how attacks work — enabling defenders to build countermeasures and attribution."},
+      {q:"What is the intelligence processing phase in cyber intelligence?",opts:["Filtering and analyzing raw data to extract actionable insights","Deploying antivirus software","Encrypting data on cloud platforms","Tracking user activity on social media"],correct:0,anchor:"Processing phase = filtering raw collected data → extracting actionable insights for decision-makers."},
+      {q:"What is threat hunting?",opts:["Actively searching for potential cyber threats before they cause harm","Creating backups for important files","Scanning emails for spam","Monitoring internet browsing activity"],correct:0,anchor:"Threat hunting is PROACTIVE — analysts actively search networks for threats that evaded automated detection."},
+      {q:"Which technology is commonly used for cyber threat intelligence?",opts:["Artificial Intelligence.","Blockchain","Intrusion Detection Systems (IDS)","Cloud computing"],correct:0,anchor:"AI is the primary technology — it automates pattern recognition across massive datasets for threat detection."},
+      {q:"What is the primary purpose of a cyber-kill chain?",opts:["To outline the steps of a cyber-attack.","To identify security patches for software","To improve network speed","To create new encryption algorithms"],correct:0,anchor:"The Cyber Kill Chain (Lockheed Martin) outlines 7 stages of a cyberattack — from reconnaissance to actions on objectives."},
+      {q:"How does behavioral analytics contribute to cyber intelligence?",opts:["By detecting unusual user activity.","By blocking all network traffic","By restricting software downloads","By slowing down malware infections"],correct:0,anchor:"Behavioral analytics flags deviations from baseline behavior — detecting compromised accounts or malicious insiders."},
+      {q:"What is the role of digital forensics in cyber intelligence?",opts:["To investigate cyber-crimes and analyze digital evidence","To increase antivirus software efficiency","To promote cybersecurity awareness","To prevent social engineering attacks"],correct:0,anchor:"Digital forensics = investigates crimes + analyzes digital evidence for legal proceedings and incident response."},
+      {q:"Which type of cyber-attack involves unauthorized access to sensitive data?",opts:["Data breach.","Phishing attack","Distributed Denial of Service (DDoS) attack","Malware infection"],correct:0,anchor:"A data breach specifically involves unauthorized access to and theft of sensitive data."},
+      {q:"Why is dark web intelligence important for cybersecurity?",opts:["It helps track stolen credentials and cybercriminal activities","It reduces internet connection speeds","It promotes illegal activities","It replaces traditional firewalls"],correct:0,anchor:"The dark web is where stolen credentials, exploit kits, and criminal services are traded — monitoring it reveals emerging threats."},
+      {q:"What does endpoint security focus on protecting?",opts:["Individual devices such as laptops and smartphones","Entire network infrastructures","Only cloud storage systems","Public Wi-Fi connections"],correct:0,anchor:"Endpoint security protects individual devices (laptops, phones, tablets) — each is a potential entry point for attackers."},
+      {q:"What is the main advantage of cyber deception techniques?",opts:["They mislead attackers and gather intelligence on their tactics","They completely eliminate cyber threats","They replace antivirus software","They block all unauthorized access attempts"],correct:0,anchor:"Cyber deception (e.g., honeypots) misleads attackers AND gathers intelligence on their tools and techniques."},
+      {q:"Why is threat intelligence sharing crucial in cybersecurity?",opts:["It helps organizations proactively defend against cyber threats","It prevents organizations from hiring cybersecurity experts","It slows down the internet speed of attackers","It eliminates all risks of cyber attacks"],correct:0,anchor:"Sharing threat intel means one organization's detection becomes another's prevention — collective defense is stronger."},
+      {q:"What is one of the biggest risks of cloud computing in cyber intelligence?",opts:["Data breaches due to misconfigurations.","Increased physical security risks","Lack of internet access","Reduced need for cybersecurity measures"],correct:0,anchor:"Misconfigured cloud storage (e.g., public S3 buckets) is a leading cause of major data breaches."},
+      {q:"What is a common cyber intelligence technique?",opts:["Threat Hunting","Malware analysis","OSINT","All of the above"],correct:3,anchor:"Threat hunting, malware analysis, and OSINT are all core cyber intelligence techniques used together."},
+      {q:"What are the primary objectives of cyber intelligence?",opts:["Threat detection","Risk mitigation","Enhancing cybersecurity awareness","All of the above"],correct:3,anchor:"All three — threat detection, risk mitigation, and awareness — are primary objectives of cyber intelligence."},
+      {q:"Who benefits from cyber intelligence?",opts:["Government","Corporation","Individuals","All of the above"],correct:3,anchor:"Cyber intelligence benefits everyone: governments protect infrastructure, corporations protect assets, individuals protect privacy."},
+      {q:"Cyber intelligence uses which data sources?",opts:["Social media monitoring","Threat intelligence platforms","Dark web analysis","All of the above"],correct:3,anchor:"All three data sources — social media, TIPs, and dark web — feed into comprehensive cyber intelligence."}
+    ]
+  },
+  {
+    name: "Lecture 2 — Cyber Intelligence vs Cybersecurity",
+    questions: [
+      {q:"What is the primary focus of Cyber Intelligence?",opts:["Protecting hardware","Data collection and analysis to predict threats","Reacting to data breaches","Creating social media policies"],correct:1,anchor:"Cyber Intelligence is proactive — it focuses on collecting and analyzing data to predict threats before they materialize."},
+      {q:"Which field is defined as the practice of protecting systems, networks, and data from attacks?",opts:["Cyber Intelligence","Data Science","Cybersecurity.","Digital Forensics"],correct:2,anchor:"Cybersecurity = the practice of protecting systems, networks, and data. It is defensive and reactive."},
+      {q:"How do individuals benefit from Cyber Intelligence?",opts:["Faster internet speeds","Cheaper hardware","Phishing detection and personal data protection","Free software updates"],correct:2,anchor:"Individuals benefit through phishing detection (warning them of scams) and personal data protection."},
+      {q:"Implementation of Cyber Intelligence often involves which controversial activity?",opts:["Software development","Surveillance and data collection","Hardware recycling","Public relations"],correct:1,anchor:"Surveillance and data collection are controversial because they can infringe on privacy rights."},
+      {q:"What is a key debate in Cyber Intelligence implementation?",opts:["Speed vs. Accuracy","Cost vs. Profit","Security vs. Personal freedoms","AI vs. Human labor"],correct:2,anchor:"The core tension: Security (needing broad surveillance) vs. Personal freedoms (privacy, civil liberties)."},
+      {q:"Which ethical practice involves communicating data collection practices to the public?",opts:["Oversight","Transparency.","Civil Liberties","Confidentiality"],correct:1,anchor:"Transparency = telling the public what data is collected and why. Essential for public trust."},
+      {q:"The principle of respecting human rights and freedom of speech falls under:",opts:["Transparency","Oversight","Civil Liberties.","Automation"],correct:2,anchor:"Civil Liberties covers human rights, freedom of speech, and protection from government overreach."},
+      {q:"What does \"Oversight\" in ethical cyber intelligence refer to?",opts:["Monitoring employees","Independent review of activities","Increasing data collection","Encrypting all data"],correct:1,anchor:"Oversight = independent review of intelligence activities to prevent abuse and ensure accountability."},
+      {q:"Which future concern involves distinguishing real data from manipulated data?",opts:["AI Bias","Quantum Encryption","Deepfakes.","Skill Gaps"],correct:2,anchor:"Deepfakes create synthetic media that is nearly indistinguishable from real — a major disinformation threat."},
+      {q:"What future challenge raises concerns about bias in threat detection?",opts:["AI Bias.","Deepfakes","Quantum Encryption","Data Overload"],correct:0,anchor:"AI Bias = if training data is skewed, AI threat detection may produce discriminatory or inaccurate results."},
+      {q:"Which emerging technology will require entirely new cybersecurity regulations?",opts:["Cloud Storage","Quantum Encryption","Social Media","Blockchain"],correct:1,anchor:"Quantum encryption (and quantum computing) breaks current encryption standards — requiring completely new regulatory frameworks."},
+      {q:"Cyber Intelligence is considered a ______ approach to security.",opts:["Reactive","Defensive","Proactive.","Passive"],correct:2,anchor:"Cyber Intelligence is PROACTIVE — it acts before attacks happen, unlike cybersecurity which often reacts after."},
+      {q:"Cybersecurity is primarily characterized as what type of strategy?",opts:["Predictive","Reactive and defensive","Proactive","Offensive"],correct:1,anchor:"Cybersecurity is primarily REACTIVE AND DEFENSIVE — it responds to and defends against attacks."},
+      {q:"Threat intelligence gathering includes monitoring which of the following?",opts:["Open-source intelligence (OSINT)","Dark web monitoring","Internal security logs","All of the above"],correct:3,anchor:"Comprehensive threat intelligence monitors OSINT, dark web, AND internal logs — all three together."},
+      {q:"Predictive analysis is a core component of:",opts:["Cybersecurity","Cyber Intelligence.","Network Administration","Customer Support"],correct:1,anchor:"Predictive analysis is a hallmark of Cyber Intelligence — forecasting threats before they occur."},
+      {q:"How does Cyber Intelligence support Cybersecurity regarding threat actors?",opts:["By ignoring them","By identifying and analyzing their behavior","By paying ransoms","By deleting their accounts"],correct:1,anchor:"CI provides cybersecurity with intelligence on threat actor behavior — enabling proactive defense."},
+      {q:"Intelligence-driven insights help security teams to:",opts:["Predict attack patterns.","Reduce internet costs","Create marketing ads","Increase data storage"],correct:0,anchor:"Intelligence-driven insights enable security teams to predict attack patterns and prepare defenses accordingly."},
+      {q:"How does Cyber Intelligence improve Incident Response?",opts:["It prevents incidents from ever happening","It provides context for faster and more effective responses","It replaces the incident response team","It eliminates the need for logs"],correct:1,anchor:"CI provides CONTEXT — who attacked, how, and why — enabling faster and more targeted incident response."},
+      {q:"Which challenge describes the overwhelming volume of threat data?",opts:["Skill Gaps","Data Overload","Cost","AI Bias"],correct:1,anchor:"Data Overload = the challenge of processing massive volumes of threat data from countless sources."},
+      {q:"What is a major hurdle for organizations lacking intelligence analysis expertise?",opts:["Data Overload","Skill Gaps.","Real-time updates","AI Bias"],correct:1,anchor:"Skill Gaps are a major challenge — cyber intelligence requires specialized expertise that is in short supply."},
+      {q:"Why are \"Real-Time\" updates a challenge in Cyber Intelligence?",opts:["Data is too expensive","Threats evolve too rapidly to keep data up to date","Internet speeds are too slow","AI refuses to update"],correct:1,anchor:"Cyber threats evolve rapidly — threat intelligence must update in real-time to remain relevant and actionable."},
+      {q:"What platform is recommended for automating threat intelligence collection?",opts:["Social Media Platform","Threat Intelligence Platform (TIP)","Cloud Storage Platform","Gaming Platform"],correct:1,anchor:"TIPs (Threat Intelligence Platforms) automate the collection, analysis, and sharing of threat intelligence."},
+      {q:"Which technologies are essential for real-time threat detection?",opts:["AI and Machine Learning","HTML and CSS","Bluetooth and Wi-Fi","Hardware and Cooling"],correct:0,anchor:"AI and Machine Learning process massive data streams in real-time — essential for detecting threats as they happen."},
+      {q:"What is a \"Cyber Fusion Center\"?",opts:["A place to store hardware","A centralized unit combining Intelligence and Security efforts","A data recovery site","A government legal department"],correct:1,anchor:"Cyber Fusion Center = a centralized hub where intelligence and security operations teams work together."},
+      {q:"What ensures quick containment and mitigation of threats?",opts:["Data Overload","Incident Response Playbooks","Public announcements","Deleting server logs"],correct:1,anchor:"Incident Response Playbooks provide pre-planned, step-by-step procedures for rapid threat containment."},
+      {q:"Collaborating with industry peers to enhance collective security is called:",opts:["Threat Intelligence Sharing","Data Hoarding","Competitive Intelligence","Corporate Espionage"],correct:0,anchor:"Threat Intelligence Sharing = organizations share threat data to collectively strengthen everyone's defenses."},
+      {q:"Cyber Intelligence involves gathering data to mitigate risks ______ they cause harm.",opts:["After","During","Before.","While"],correct:2,anchor:"Cyber Intelligence is BEFORE — it is proactive intelligence designed to prevent harm, not react to it."},
+      {q:"Ethical challenges in Cyber Intelligence primarily stem from:",opts:["Data collection and surveillance","High software costs","Slow processing speeds","Lack of hardware"],correct:0,anchor:"Data collection and surveillance are the root of ethical challenges — privacy vs. security tension."},
+      {q:"Strategic decision-making based on insights is a key feature of:",opts:["Cybersecurity","Cyber Intelligence","Data Entry","Help Desk"],correct:1,anchor:"Cyber Intelligence informs strategic decision-making by converting raw data into actionable insights."},
+      {q:"Cybercrime has made individuals specifically vulnerable to:",opts:["Hardware failure","Identity theft and fraud.","Poor internet connection","High electricity bills"],correct:1,anchor:"Identity theft and fraud are the primary ways cybercrime impacts individuals directly."},
+      {q:"What are \"Cross-Border Challenges\" in cyber intelligence?",opts:["Moving hardware between offices","Differences in legal frameworks between countries","Translating data into different languages","Shipping delays"],correct:1,anchor:"Cross-border challenges arise because countries have different cybercrime laws — complicating international cooperation."},
+      {q:"AI Bias is a concern specifically related to:",opts:["Data storage","Threat detection accuracy.","Monitor resolution","Keyboard layouts"],correct:1,anchor:"AI Bias directly impacts threat detection accuracy — biased models may miss threats or flag innocent activity."},
+      {q:"Automation in Cyber Intelligence is primarily used to improve:",opts:["Efficiency.","Employee morale","Physical security","Graphics quality"],correct:0,anchor:"Automation improves efficiency — processing vast threat data faster than human analysts ever could."},
+      {q:"Which of these is primarily a defensive strategy?",opts:["Cyber Intelligence","Cybersecurity.","Offensive Hacking","Social Engineering"],correct:1,anchor:"Cybersecurity is primarily DEFENSIVE — implementing controls to protect systems and data from attacks."},
+      {q:"Integrating Cyber Intelligence with Cybersecurity helps in:",opts:["Increasing the cost of security","Strengthening the overall security posture","Reducing the number of employees","Making data public"],correct:1,anchor:"Integration of CI + cybersecurity creates a proactive + reactive combined posture — stronger overall."},
+      {q:"Maintaining a dedicated threat intelligence team requires:",opts:["Zero budget","Significant investment.","No special skills","Only hardware"],correct:1,anchor:"Dedicated threat intelligence teams require significant investment — skilled analysts, tools, and data subscriptions."},
+      {q:"Intelligence gathering includes which of the following sources?",opts:["Dark Web","OSINT","Internal logs","All of the above"],correct:3,anchor:"Intelligence gathering uses all available sources: dark web, OSINT, and internal logs together."},
+      {q:"Dark web monitoring is a benefit for:",opts:["Only large corporations","Individuals and organizations","Only governments","Social media influencers"],correct:1,anchor:"Dark web monitoring benefits both individuals (stolen credentials) and organizations (data breach detection)."}
+    ]
+  },
+  {
+    name: "Lecture 3 — The Three Domains of Cyber Intelligence",
+    questions: [
+      {q:"What are the three main domains of cyber intelligence?",opts:["Human, Digital, Electronic.","Physical, Digital, Social","Cyber, Social, Mechanical","Intelligence, Cyber, Defense"],correct:0,anchor:"The three domains are Human, Digital, and Electronic — together they cover all aspects of cyber intelligence."},
+      {q:"The human domain in cyber intelligence primarily deals with:",opts:["Data encryption","Social engineering and insider threats","Signal intelligence","Hardware security"],correct:1,anchor:"Human domain = social engineering and insider threats — people are both the target and the source of these risks."},
+      {q:"Which of the following is an example of social engineering?",opts:["Phishing emails.","Network encryption","Using firewalls","Updating software"],correct:0,anchor:"Phishing emails are the classic social engineering attack — manipulating humans via deceptive communication."},
+      {q:"The digital domain in cyber intelligence refers to:",opts:["physical network infrastructure","human psychological factors","Online interactions, data analysis, and digital forensics","satellite hacking"],correct:2,anchor:"Digital domain = online interactions, data analysis, and digital forensics — the software and data layer."},
+      {q:"The electronic domain in cyber intelligence focuses on:",opts:["Securing digital interactions","Wireless communications, network infrastructure, and signal interception","Employee training programs","Cloud security"],correct:1,anchor:"Electronic domain = wireless comms, network infrastructure, and signal interception (SIGINT)."},
+      {q:"One way cybercriminals exploit the human domain is through:",opts:["antivirus software","two-factor authentication","Psychological manipulation.","quantum encryption"],correct:2,anchor:"Psychological manipulation (deception, urgency, fear) is the core mechanism of human domain exploitation."},
+      {q:"Digital forensics is mainly used for:",opts:["Identifying insider threats","Tracing and analyzing cyber incidents","Creating fake identities online","Deleting network logs"],correct:1,anchor:"Digital forensics traces and analyzes cyber incidents — following the digital evidence trail."},
+      {q:"What is a common method attackers use in the electronic domain?",opts:["Phishing","Electromagnetic surveillance","Social engineering","Password cracking"],correct:1,anchor:"Electromagnetic surveillance (SIGINT) is the key electronic domain attack method — intercepting signals."},
+      {q:"Cyber intelligence integrates human, digital, and electronic domains to:",opts:["Strengthen cybersecurity defenses.","Spread misinformation","Increase privacy breaches","Replace cybersecurity tools"],correct:0,anchor:"Integration of all three domains creates a comprehensive, multi-layered cyber intelligence capability."},
+      {q:"Which of the following best describes the intersection of the three domains?",opts:["Each domain operates in isolation","They collectively strengthen threat detection and response strategies","Digital and human domains are more important than electronic","Electronic intelligence is unnecessary in cybersecurity"],correct:1,anchor:"The three domains intersect and collectively strengthen threat detection — no single domain is sufficient alone."},
+      {q:"What is a key risk in the human domain?",opts:["Weak passwords","Insider threats.","Malware infections","Encrypted communications"],correct:1,anchor:"Insider threats are the key human domain risk — trusted individuals with access who misuse it."},
+      {q:"Cyber adversaries use social media for:",opts:["Identity theft.","Hardware manipulation","Quantum computing","None of the above"],correct:0,anchor:"Social media is a goldmine for identity theft — personal info posted publicly aids impersonation attacks."},
+      {q:"A common tool used in digital forensics is:",opts:["Firewalls","Wireshark.","Social engineering","Encryption algorithms"],correct:1,anchor:"Wireshark is a packet analyzer — a fundamental digital forensics tool for analyzing network traffic."},
+      {q:"The electronic domain is most concerned with:",opts:["Physical network security","Behavioral analytics","Public relations","Marketing strategies"],correct:0,anchor:"The electronic domain focuses on physical network security — hardware, cables, signals, and infrastructure."},
+      {q:"One method used in cyber espionage is:",opts:["Electromagnetic surveillance","Phishing emails","Firewalls","Security patches"],correct:0,anchor:"Electromagnetic surveillance (intercepting signals) is a key cyber espionage technique in the electronic domain."},
+      {q:"What is the primary goal of digital intelligence?",opts:["To secure physical infrastructure","To analyze cyber threats and digital activities","To control electromagnetic signals","To replace cybersecurity professionals"],correct:1,anchor:"Digital intelligence analyzes cyber threats and digital activities — turning raw data into actionable intelligence."},
+      {q:"The human domain is vulnerable because of:",opts:["Strong encryption","Automated security tools","Social engineering attacks.","Cyber-physical systems"],correct:2,anchor:"Social engineering attacks exploit human psychology — making the human domain inherently vulnerable."},
+      {q:"Digital threat intelligence helps organizations by:",opts:["Monitoring network traffic.","Protecting against physical theft","Enhancing marketing campaigns","Strengthening offline security"],correct:0,anchor:"Monitoring network traffic reveals attack patterns, anomalies, and intrusions in the digital domain."},
+      {q:"The electronic domain is critical for:",opts:["Protecting against electromagnetic interference","Managing human resources","Performing market analysis","Preventing insider trading"],correct:0,anchor:"Protection against electromagnetic interference is a core concern of the electronic domain."},
+      {q:"Which of the following is a key challenge in cyber intelligence?",opts:["Lack of cybersecurity tools","Rapidly evolving threats.","Decreasing cybercrime rates","Limited use of encryption"],correct:1,anchor:"Rapidly evolving threats are the top challenge — attackers constantly develop new techniques to evade defenses."},
+      {q:"What is a primary goal of cyber intelligence in the digital domain?",opts:["Enhancing user experience","Identifying and mitigating cyber threats","Increasing website traffic","Promoting online advertising"],correct:1,anchor:"In the digital domain, the primary goal is identifying and mitigating cyber threats."},
+      {q:"The human domain is crucial in cyber intelligence because:",opts:["Humans are immune to cyber threats","Social engineering attacks target people.","Only machines process cyber intelligence","The human domain is unrelated to cybersecurity"],correct:1,anchor:"Social engineering attacks specifically target humans — making the human domain central to cyber intelligence."},
+      {q:"Phishing attacks primarily exploit which domain of cyber intelligence?",opts:["Digital","Electronic","Human.","Cloud"],correct:2,anchor:"Phishing targets human psychology — it belongs to the Human domain, not digital or electronic."},
+      {q:"What role does artificial intelligence play in cyber intelligence?",opts:["Automating threat detection.","Replacing cybersecurity professionals","Eliminating all cyber threats","Preventing human errors"],correct:0,anchor:"AI automates threat detection — processing vast amounts of data far faster than human analysts."},
+      {q:"The electronic domain includes:",opts:["Network infrastructure.","Human interactions","Marketing strategies","Legal policies"],correct:0,anchor:"Network infrastructure is part of the electronic domain — physical cables, routers, and hardware."},
+      {q:"Digital intelligence helps organizations by:",opts:["Monitoring online activities.","Reducing cybersecurity investments","Promoting data leaks","Eliminating cyber laws"],correct:0,anchor:"Monitoring online activities is the core function of digital intelligence — tracking threats in the digital space."},
+      {q:"The most common type of insider threat is:",opts:["Malware infections","Accidental data breaches.","External cyberattacks","Strong encryption practices"],correct:1,anchor:"Accidental data breaches (careless employees) are the most common insider threat — not malicious actors."},
+      {q:"Which of the following is an example of electronic intelligence?",opts:["Malware detection","Radio frequency monitoring.","Phishing simulations","Employee awareness programs"],correct:1,anchor:"Radio frequency monitoring is SIGINT — intercepting electronic signals, a core electronic domain activity."},
+      {q:"Cyber threat intelligence is primarily used to:",opts:["Enhance business marketing","Detect and prevent cyber threats.","Improve social media presence","Strengthen brand recognition"],correct:1,anchor:"Detecting and preventing cyber threats is the primary use of cyber threat intelligence."},
+      {q:"What is the primary focus of cybersecurity operations within the digital domain?",opts:["Threat detection and response","Social media marketing","Hardware maintenance","Employee satisfaction"],correct:0,anchor:"In the digital domain, cybersecurity operations focus on threat detection and response."},
+      {q:"Social engineering tactics include:",opts:["Phishing.","Firewall installation","Encryption methods","Cloud security"],correct:0,anchor:"Phishing is the quintessential social engineering tactic — deception via communication."},
+      {q:"Which cyber intelligence domain is involved in tracking adversarial communications?",opts:["Human domain","Digital domain","Electronic domain.","None of the above"],correct:2,anchor:"Tracking communications (signals intelligence) belongs to the Electronic domain."},
+      {q:"A key reason for increasing cyber threats is:",opts:["Lack of user awareness.","Decreasing number of hackers","Government intervention","Declining technology usage"],correct:0,anchor:"Lack of user awareness is a key driver — untrained users fall for phishing, use weak passwords, etc."},
+      {q:"What can cyber intelligence help with?",opts:["Predicting cyber-attacks","Enhancing cybersecurity measures","Reducing false positives in threat detection","All of the above"],correct:3,anchor:"Cyber intelligence helps with all three: predicting attacks, enhancing measures, and reducing false positives."}
+    ]
+  },
+  {
+    name: "Lecture 4 — Domain Intersection & Emerging Technologies",
+    questions: [
+      {q:"What are the domains integrated by cyber intelligence?",opts:["Human, digital, and electronic","Physical, digital, and mechanical","Cyber, defense, and social","None of the above"],correct:0,anchor:"Human, digital, and electronic are the three foundational domains integrated by cyber intelligence."},
+      {q:"Where does the true power of cyber intelligence domains lie?",opts:["In their isolation","In their intersection","In their individual complexity","In their simplicity"],correct:1,anchor:"The power lies in their INTERSECTION — combined, the three domains provide comprehensive threat coverage."},
+      {q:"What is a key area where domains overlap in cyber operations?",opts:["Hardware manufacturing","Social engineering prevention","Marketing strategies","Employee satisfaction"],correct:1,anchor:"Social engineering prevention requires all three domains working together — human awareness, digital detection, electronic monitoring."},
+      {q:"What role do machine learning algorithms play in the intersection of domains?",opts:["Creating physical barriers","Analyzing vast amounts of digital data","Monitoring weather patterns","Replacing human analysts completely"],correct:1,anchor:"Machine learning analyzes vast digital data across all domains — finding patterns humans would miss."},
+      {q:"How do human analysts contribute in the multi-domain approach?",opts:["By writing basic code","By ignoring electronic signals","By interpreting threat narratives","By physically securing data centers"],correct:2,anchor:"Human analysts provide context and judgment — interpreting threat narratives that machines detect but cannot understand."},
+      {q:"What provides real-time alerts in a multi-domain cyber approach?",opts:["Printed reports","Electronic signals","Human intuition","Social media influencers"],correct:1,anchor:"Electronic signals (network traffic, sensor data) provide real-time alerts in the multi-domain approach."},
+      {q:"What does the multi-domain approach enhance?",opts:["Predictive intelligence capabilities","Data loss","Hardware aging","Manual processing time"],correct:0,anchor:"Multi-domain approach enhances predictive intelligence — combining all data sources for better forecasting."},
+      {q:"Which technology is expected to automate intelligence gathering in the future?",opts:["AI and machine learning","Typewriters","Analog radios","Basic spreadsheets"],correct:0,anchor:"AI and machine learning will automate intelligence gathering — processing and analyzing threats at machine speed."},
+      {q:"Which technology is noted for enhancing data security due to its decentralized nature?",opts:["Blockchain","Cloud storage","Flash drives","Optical disks"],correct:0,anchor:"Blockchain's decentralized nature means no single point of failure — making data tamper-resistant."},
+      {q:"What is a benefit of leveraging the intersection of cyber domains?",opts:["Increasing employee turnover","Mitigating risks and enhancing national security","Reducing internet speed","Complicating user interfaces"],correct:1,anchor:"Domain intersection mitigates risks and enhances national security — a comprehensive defense strategy."},
+      {q:"How is cyber intelligence primarily evolving?",opts:["By avoiding new tech","Through rapid advancements in emerging technologies","By reverting to analog methods","Through decreasing data volumes"],correct:1,anchor:"Cyber intelligence evolves through emerging technologies like AI, quantum computing, and blockchain."},
+      {q:"Which of the following is NOT listed as an emerging technology in cyber intelligence?",opts:["Artificial Intelligence","Machine Learning","Steam Power","Quantum Computing"],correct:2,anchor:"Steam Power is an industrial-era technology — not an emerging cyber intelligence technology."},
+      {q:"What is blockchain technology revolutionizing in this context?",opts:["Cyber intelligence and data security","Video game development","Agricultural tracking","Automotive manufacturing"],correct:0,anchor:"Blockchain revolutionizes cyber intelligence data security through decentralized, immutable records."},
+      {q:"Why is blockchain suitable for sensitive intelligence data?",opts:["It is easy to hack","Due to its decentralized and secure nature","Because it is offline","Because it requires no electricity"],correct:1,anchor:"Blockchain's decentralized and secure nature makes it ideal for sensitive intelligence data."},
+      {q:"What does blockchain help prevent in cyber intelligence?",opts:["Fast network speeds","Unauthorized access and data tampering","Data backups","Use of strong passwords"],correct:1,anchor:"Blockchain prevents unauthorized access and data tampering through its immutable ledger structure."},
+      {q:"How do cyber intelligence agencies leverage blockchain?",opts:["For secure communications and digital identity verification","To create social media profiles","To design hardware","To train dogs"],correct:0,anchor:"Agencies use blockchain for secure communications and digital identity verification — provable authenticity."},
+      {q:"How does blockchain assist organizations in tracking cyber threats?",opts:["It deletes old threats","It maintains a transparent and immutable record","It hides the origin of attacks","It disables firewalls"],correct:1,anchor:"Blockchain's transparent and immutable record ensures threat data cannot be altered or disputed."},
+      {q:"What kind of encryption are intelligence agencies investing in for the future?",opts:["WEP encryption","Quantum-resistant encryption techniques","Caesar cipher","DES encryption"],correct:1,anchor:"Quantum-resistant encryption is needed to withstand attacks from quantum computers that break current encryption."},
+      {q:"Why are advanced security measures needed for IoT ecosystems?",opts:["To make devices heavier","To decrease device connectivity","To protect them from cyber attacks","To increase power consumption"],correct:2,anchor:"IoT devices (smart home, industrial sensors) are often poorly secured — advanced measures protect this growing attack surface."},
+      {q:"What approaches will see continuous advancements in the future of cyber intelligence?",opts:["Automation, AI, and data-driven security","Manual data entry","Paper-based records","Unencrypted communications"],correct:0,anchor:"Automation, AI, and data-driven security are the three pillars of future cyber intelligence advancement."},
+      {q:"What will the integration of AI with cybersecurity improve?",opts:["Hardware degradation","Threat intelligence","Office ergonomics","Physical building security"],correct:1,anchor:"AI integration improves threat intelligence — faster detection, better prediction, automated response."},
+      {q:"How will predictive analytics help security teams?",opts:["By anticipating attacks before they happen","By restoring deleted files","By fixing hardware bugs","By organizing emails"],correct:0,anchor:"Predictive analytics anticipates attacks before they happen — shifting security from reactive to proactive."},
+      {q:"What must governments and organizations invest in to stay ahead of cyber threats?",opts:["Emerging technologies","Legacy systems","Obsolete software","Unsecured networks"],correct:0,anchor:"Investing in emerging technologies is essential to stay ahead — threats evolve, and defenses must too."},
+      {q:"Which platforms have become a modern battlefield for cyber intelligence operations?",opts:["Social media platforms","E-commerce websites","Online encyclopedias","Streaming services"],correct:0,anchor:"Social media platforms are battlefields for influence operations, espionage, and disinformation campaigns."},
+      {q:"Who leverages social media platforms for propaganda according to the lecture?",opts:["Only corporations","Only governments","Governments, corporations, and cybercriminals","Only independent hackers"],correct:2,anchor:"All three — governments, corporations, AND cybercriminals — use social media for propaganda and intelligence."},
+      {q:"What role does cyber intelligence play in social media?",opts:["Creating viral content","Identifying and countering misinformation campaigns","Increasing ad revenue","Managing influencer accounts"],correct:1,anchor:"Cyber intelligence identifies and counters misinformation campaigns on social media — information warfare defense."},
+      {q:"Which domain is described as the core of cyber intelligence?",opts:["The Human Domain","The Digital Domain.","The Electronic Domain","The Physical Domain"],correct:0,anchor:"The Human Domain is the core — humans are both the strongest and weakest links in any security system."},
+      {q:"According to the lecture, who are considered both the strongest and weakest links in cybersecurity?",opts:["Routers","Humans.","AI algorithms","Firewalls"],correct:1,anchor:"Humans: strongest (expert analysts) and weakest (social engineering victims) — both extremes in cybersecurity."},
+      {q:"What do threat actors exploit in the human domain?",opts:["Strong passwords","Psychological, behavioral, and social vulnerabilities","Up-to-date software","Encrypted data"],correct:1,anchor:"Threat actors exploit psychological (fear/urgency), behavioral (habits), and social (trust) vulnerabilities."},
+      {q:"What do cyber defenders leverage to counteract human-targeted threats?",opts:["Human expertise.","More malware","Unsecured devices","Phishing techniques"],correct:0,anchor:"Human expertise — trained analysts, security awareness programs — counters human-targeted threats."},
+      {q:"Which domain is described as the battlefield of cyber operations?",opts:["The Digital Domain.","The Human Domain","The Electronic Domain","The Space Domain"],correct:0,anchor:"The Digital Domain is the battlefield — where most cyber attacks are launched, fought, and won or lost."},
+      {q:"Which domain is described as the backbone of cyber infrastructure?",opts:["The Electronic Domain.","The Human Domain","The Digital Domain","The Quantum Domain"],correct:0,anchor:"The Electronic Domain is the backbone — the physical hardware and signals that all digital activity runs on."},
+      {q:"What guarantees the authenticity of intelligence reports using decentralized ledgers?",opts:["Blockchain.","Cloud computing","Phishing","Social engineering"],correct:0,anchor:"Blockchain guarantees authenticity — its immutable, decentralized ledger cannot be altered undetected."},
+      {q:"What type of computing is forcing a shift toward new encryption techniques?",opts:["Quantum Computing.","Cloud Computing","Edge Computing","Fog Computing"],correct:0,anchor:"Quantum Computing can break current encryption (RSA, AES) — forcing adoption of quantum-resistant algorithms."},
+      {q:"What is one of the main goals of spreading misinformation on social media?",opts:["To manipulate public opinion.","To improve cyber hygiene","To test network speed","To promote cybersecurity awareness"],correct:0,anchor:"Misinformation campaigns aim to manipulate public opinion — a key goal of information warfare."},
+      {q:"AI-driven cybersecurity solutions will make cyber defense systems more:",opts:["Rigid and slow","Adaptive and proactive.","Manual and tedious","Vulnerable and weak"],correct:1,anchor:"AI makes cyber defense adaptive (learning from new threats) and proactive (predicting attacks)."},
+      {q:"What makes blockchain's record of cyber threats highly trustworthy?",opts:["It is transparent and immutable.","It is easily editable","It is stored locally on one device","It requires no authentication"],correct:0,anchor:"Blockchain records are transparent (anyone can verify) and immutable (cannot be altered) — guaranteeing trust."},
+      {q:"What is the primary objective of implementing quantum-resistant encryption?",opts:["To speed up internet connections","To counter future cyber threats.","To compress data","To simplify password creation"],correct:1,anchor:"Quantum-resistant encryption is built to counter future cyber threats from quantum computers."},
+      {q:"Besides human and digital, what is the third foundational domain of cyber intelligence?",opts:["Electronic.","Physical","Cognitive","Network"],correct:0,anchor:"The three domains: Human, Digital, and Electronic. Electronic covers hardware, signals, and infrastructure."},
+      {q:"Tracking cybercriminal activities and secure communications can be effectively managed using:",opts:["Blockchain.","Plaintext emails","Unsecured radio","Public forums"],correct:0,anchor:"Blockchain provides a secure, immutable record for tracking cybercriminal activities and securing communications."}
+    ]
+  },
+  {
+    name: "Lecture 5 — Data Collection & Analysis",
+    questions: [
+      {q:"What is the primary goal of cyber intelligence data collection?",opts:["Increase internet speed","Identify threats and mitigate risks.","Promote digital marketing strategies","Create more social media engagement"],correct:1,anchor:"Data collection's primary goal: identify threats and mitigate risks before they cause harm."},
+      {q:"Open Source Intelligence (OSINT) gathers information from:",opts:["Classified government documents","Publicly available sources.","Private intelligence agencies","Encrypted databases"],correct:1,anchor:"OSINT = publicly available sources: news sites, social media, public records, forums, websites."},
+      {q:"Which of the following is NOT a cyber-intelligence data collection technique?",opts:["HUMINT","SIGINT","KINETIC.","OSINT"],correct:2,anchor:"KINETIC refers to physical/military operations — not an intelligence collection technique. HUMINT, SIGINT, OSINT are valid."},
+      {q:"Which intelligence method involves human interaction for gathering information?",opts:["sigint","humint.","OSINT","ai-driven intelligence"],correct:1,anchor:"HUMINT (Human Intelligence) uses human sources — informants, interviews, social interactions."},
+      {q:"A key challenge in cyber intelligence data collection is:",opts:["Overload of irrelevant data.","lack of sources","limited storage capacity","the absence of regulations"],correct:0,anchor:"Data overload is a critical challenge — vast amounts of irrelevant data bury the valuable intelligence signals."},
+      {q:"What is the main concern regarding cyber data collection and privacy laws?",opts:["how to sell collected data legally","compliance with regulations like gdpr and ccpa","The difficulty in hiring data analysts","the cost of cybersecurity measures"],correct:1,anchor:"GDPR (EU) and CCPA (California) set strict rules on data collection — compliance is essential to avoid penalties."},
+      {q:"A major ethical issue in cyber intelligence is:",opts:["The use of data for advertising","Unauthorized surveillance.","Data redundancy","The inefficiency of AI"],correct:1,anchor:"Unauthorized surveillance is a major ethical issue — collecting data on individuals without their knowledge or consent."},
+      {q:"Dark Web Intelligence is important because:",opts:["It allows government agencies to promote their policies","Cybercriminals use the dark web for illegal activities.","It reduces the need for ethical considerations","It prevents all forms of cyber threats"],correct:1,anchor:"The dark web hosts illegal marketplaces for stolen data, malware, and criminal services — monitoring it reveals threats."},
+      {q:"What type of intelligence uses network monitoring to detect suspicious activity?",opts:["OSINT","SIGINT.","HUMINT","GEOINT"],correct:1,anchor:"SIGINT (Signals Intelligence) monitors electronic signals and network traffic to detect suspicious activity."},
+      {q:"Threat Intelligence Feeds help organizations by:",opts:["Tracking social media engagement","Providing real-time information on cyber threats","Enhancing digital marketing campaigns","Monitoring online shopping trends"],correct:1,anchor:"Threat Intelligence Feeds deliver real-time, actionable data on current and emerging cyber threats."},
+      {q:"Big Data plays a major role in cyber intelligence by:",opts:["Storing historical attack data","Preventing cyberattacks automatically","Improving intelligence analysis and threat detection","Encrypting all user data"],correct:2,anchor:"Big Data enables analysis of massive datasets — uncovering hidden patterns and correlations in threat data."},
+      {q:"Which technology is commonly used in big data analytics for cyber intelligence?",opts:["Blockchain","Hadoop.","Virtual Reality","Smartwatches"],correct:1,anchor:"Apache Hadoop is the standard framework for processing and storing massive big data datasets."},
+      {q:"Machine Learning helps cyber intelligence by:",opts:["Predicting future cyberattacks.","Increasing phishing attempts","Preventing hardware malfunctions","Reducing website loading times"],correct:0,anchor:"Machine Learning identifies patterns in historical attack data to predict future cyberattacks."},
+      {q:"What is a major challenge of Big Data in cyber intelligence?",opts:["Not enough available data","Handling and analyzing large-scale data","Too much government support","Limited use of AI"],correct:1,anchor:"The challenge of big data is scale — handling and analyzing petabytes of security data in real time."},
+      {q:"A SIEM (Security Information and Event Management) system is used for:",opts:["storing big data","Analyzing security events and logs","enhancing social media presence","blocking all internet traffic"],correct:1,anchor:"SIEM systems collect, correlate, and analyze security events and logs for real-time threat detection."},
+      {q:"Data visualization techniques in cyber intelligence include:",opts:["Heat maps and network graphs","AI voice recognition","Smart home automation","Text-based analysis only"],correct:0,anchor:"Heat maps (threat density) and network graphs (relationship mapping) visualize complex security data intuitively."},
+      {q:"Which emerging technology is expected to impact cyber intelligence significantly?",opts:["Quantum Computing.","Mechanical Engineering","Manual Data Entry","Radio Broadcasting"],correct:0,anchor:"Quantum Computing will revolutionize both encryption (breaking it) and cyber intelligence (faster computation)."},
+      {q:"Which of the following data sources is commonly used in cyber intelligence?",opts:["Online advertisements","Threat Intelligence Feeds.","Video game forums","Weather reports"],correct:1,anchor:"Threat Intelligence Feeds are standard data sources — providing curated, real-time threat information."},
+      {q:"What is the purpose of network traffic analysis in cyber intelligence?",opts:["To detect and prevent cyber threats.","to increase website loading speed","to improve online shopping experiences","to monitor television broadcasts"],correct:0,anchor:"Network traffic analysis detects anomalies and attack patterns — revealing threats in real time."},
+      {q:"Artificial Intelligence (AI) helps in cyber intelligence by:",opts:["Slowing down security analysis","Increasing social media engagement","Automating threat detection and response","Preventing unauthorized phone calls"],correct:2,anchor:"AI automates threat detection and response — processing threats at machine speed, reducing analyst workload."},
+      {q:"Which cybersecurity measures help protect an organization's data?",opts:["Encryption and access controls","Multi-factor authentication (MFA)","Firewalls and Intrusion Detection Systems (IDS)","All of them"],correct:3,anchor:"All three — encryption, MFA, and firewalls/IDS — work together to protect organizational data."},
+      {q:"What are the benefits of integrating machine learning into cyber intelligence?",opts:["Improved threat detection accuracy","Automated data analysis and pattern recognition","Faster response to cyber threats","All of them"],correct:3,anchor:"ML provides all three benefits: improved accuracy, automated analysis, and faster response."},
+      {q:"Which cybersecurity threats can cyber-intelligence help prevent?",opts:["Phishing and social engineering attacks","Malware and ransomware infections","Insider threats and unauthorized access","All of them"],correct:3,anchor:"Cyber intelligence helps prevent all threat categories: phishing, malware, ransomware, and insider threats."},
+      {q:"Which of the following best practices enhance cyber-intelligence efforts?",opts:["Continuous monitoring of networks and endpoints","Sharing threat intelligence with industry partners","Using AI-powered security tools for threat detection","All of them"],correct:3,anchor:"All three best practices — continuous monitoring, sharing, and AI tools — enhance cyber intelligence effectiveness."},
+      {q:"What are key components of a strong cyber-intelligence strategy?",opts:["Data collection and analysis","Threat identification and response","Compliance with cybersecurity regulations","All of them"],correct:3,anchor:"A strong strategy requires all three: data collection/analysis, threat ID/response, and regulatory compliance."},
+      {q:"Which fields are essential for developing effective cyber-intelligence solutions?",opts:["Data science and analytics","Computer science and cybersecurity","Artificial intelligence and automation","All of them"],correct:3,anchor:"Effective cyber intelligence requires all three fields: data science, computer science/cybersecurity, and AI/automation."},
+      {q:"What is the role of a SIEM system?",opts:["Managing social media accounts","Collecting, analyzing, and correlating security event data","Creating digital advertisements","Tracking website visits"],correct:1,anchor:"SIEM = collect + analyze + correlate security event data from across the entire IT environment."},
+      {q:"How does Open Source Intelligence (OSINT) support cyber intelligence?",opts:["By collecting classified military data","By collecting publicly available information","By hacking into private accounts","By encrypting all personal data"],correct:1,anchor:"OSINT collects publicly available information — no hacking or classification needed, just open sources."},
+      {q:"What is the primary goal of Dark Web Intelligence?",opts:["To monitor illicit activities and cybercriminal networks.","To promote businesses in the dark web","To allow governments to create private browsing networks","To eliminate internet anonymity"],correct:0,anchor:"Dark Web Intelligence monitors illicit activities and cybercriminal networks for threat intelligence."},
+      {q:"Big data analytics in cyber intelligence helps with:",opts:["Identifying trends and patterns in cyber threats","Selling user data to advertisers","Encrypting all cyber traffic","Removing all malicious software"],correct:0,anchor:"Big data analytics identifies trends and patterns — revealing the bigger picture of the threat landscape."},
+      {q:"Which technology is commonly used for processing big data?",opts:["Virtual Reality","Apache Hadoop.","Satellite Communications","Traditional Hard Drives"],correct:1,anchor:"Apache Hadoop is the industry standard for distributed big data processing at scale."},
+      {q:"Why is data privacy important in cyber intelligence?",opts:["To ensure compliance with legal and ethical standards","to increase website rankings","to prevent hackers from launching cyber-attacks","to collect as much personal information as possible"],correct:0,anchor:"Data privacy ensures compliance with GDPR, CCPA, and ethical standards — protecting individuals' rights."},
+      {q:"One of the key challenges in cyber intelligence is:",opts:["Handling large volumes of unstructured data.","The lack of cybersecurity threats","The difficulty of advertising intelligence platforms","The simplicity of cyber threat detection"],correct:0,anchor:"Unstructured data (emails, social posts, logs) is the majority of threat data and hardest to analyze."},
+      {q:"What does predictive analytics do in cyber intelligence?",opts:["Makes cyber-attacks more effective","Prevents the need for security updates","Helps anticipate future cyber threats.","Reduces the need for cybersecurity experts"],correct:2,anchor:"Predictive analytics anticipates future threats — enabling proactive defenses before attacks occur."},
+      {q:"Why do organizations use security logs in cyber intelligence?",opts:["To sell user data","To track and investigate suspicious activity","To generate more website traffic","To monitor online shopping behavior"],correct:1,anchor:"Security logs track all system events — essential for investigating incidents and finding suspicious patterns."},
+      {q:"What does Threat Intelligence Sharing help with?",opts:["Increasing phishing attacks","Enhancing collective security across organizations .","Decreasing security budgets","Preventing organizations from working together"],correct:1,anchor:"Threat intelligence sharing creates a collective defense — each organization's knowledge strengthens all others."},
+      {q:"What is a key benefit of using big data in cybersecurity?",opts:["Slowing down response times","Increasing phishing attempts","Faster and more accurate threat identification","Removing security controls"],correct:2,anchor:"Big data enables faster and more accurate threat identification by analyzing massive datasets in real time."},
+      {q:"One of the biggest challenges of Dark Web Intelligence is:",opts:["It is completely illegal","It is too easy to access","Gaining access to hidden cybercriminal networks","It provides too much security"],correct:2,anchor:"Accessing hidden cybercriminal networks on the dark web requires specialized tools and expertise."},
+      {q:"Which of the following is an example of unstructured data?",opts:["SQL databases","Excel spreadsheets","Social media posts and emails","Fixed-width log files"],correct:2,anchor:"Social media posts and emails are unstructured data — free-form text that requires NLP to analyze."}
+    ]
+  },
+  {
+    name: "Lecture 6 — Advanced Analysis & Security Tools",
+    questions: [
+      {q:"Data validation in cyber intelligence ensures:",opts:["The accuracy and reliability of collected information","The increase of cyber threats","The elimination of security frameworks","The removal of all encryption"],correct:0,anchor:"Data validation ensures accuracy and reliability — garbage in, garbage out applies to threat intelligence."},
+      {q:"What is a common application of behavioral analytics in cybersecurity?",opts:["Detecting insider threats.","Monitoring weather reports","Reducing internet speed","Preventing software updates"],correct:0,anchor:"Behavioral analytics detects insider threats by flagging deviations from normal user behavior patterns."},
+      {q:"One key advantage of cloud-based cyber intelligence platforms is:",opts:["Increased website advertisements","Scalable storage and computing resources","Increased privacy concerns","Elimination of all cyber threats"],correct:1,anchor:"Cloud platforms offer scalable storage and compute — essential for processing massive threat intelligence datasets."},
+      {q:"Why is real-time data processing important in cyber intelligence?",opts:["It allows organizations to respond to threats immediately","It reduces encryption levels","It increases social media activity","It stops all cyber-attacks permanently"],correct:0,anchor:"Real-time processing enables immediate response — seconds matter when an attack is in progress."},
+      {q:"Threat Hunting refers to:",opts:["Tracking cybercriminals physically","Proactively searching for cyber threats within an organization's network","Removing threat intelligence platforms","Eliminating machine learning tools"],correct:1,anchor:"Threat Hunting is proactive — analysts actively search the network for threats that automated tools missed."},
+      {q:"What is the function of Indicators of Compromise (IoCs)?",opts:["Increasing malware distribution","Identifying malicious activity on a system or network","Eliminating all cyber threats","Removing encryption methods"],correct:1,anchor:"IoCs are artifacts (IP addresses, hashes, domains) that indicate a system has been compromised."},
+      {q:"Why is anomaly detection important in cyber intelligence?",opts:["It helps identify suspicious activity that may indicate cyber threats","It prevents organizations from improving cybersecurity","It allows attackers to access more data","It reduces the need for cyber intelligence analysts"],correct:0,anchor:"Anomaly detection flags deviations from normal behavior — early warning signs of potential attacks."},
+      {q:"Which emerging technology is expected to impact cyber intelligence significantly?",opts:["Quantum Computing.","Mechanical Engineering","Manual Data Entry","Radio Broadcasting"],correct:0,anchor:"Quantum Computing will fundamentally change encryption and cyber intelligence capabilities."},
+      {q:"What is one of the main objectives of threat intelligence platforms?",opts:["To generate online advertisements","To provide real-time threat information","To prevent cybersecurity updates","To increase network congestion"],correct:1,anchor:"TIPs provide real-time threat information — aggregating intelligence from multiple sources."},
+      {q:"What does a Security Information and Event Management (SIEM) system do?",opts:["Provides real-time security monitoring and alerts.","Increases social media followers","Prevents organizations from accessing the internet","Eliminates the need for encryption"],correct:0,anchor:"SIEM provides real-time security monitoring and alerts — the central nervous system of security operations."},
+      {q:"One of the main challenges of big data analytics in cyber intelligence is:",opts:["Processing large volumes of unstructured data.","Preventing organizations from using AI","Reducing the need for cyber intelligence tools","Slowing down security response times"],correct:0,anchor:"Processing large volumes of unstructured data (logs, emails, packets) is the core big data challenge."},
+      {q:"How does machine learning improve threat intelligence?",opts:["By identifying patterns in cyber threats.","By slowing down security systems","By eliminating encryption","By replacing all cybersecurity professionals"],correct:0,anchor:"ML identifies patterns in threat data — recognizing attack signatures and predicting future behavior."},
+      {q:"What is a honeypot in cyber intelligence?",opts:["A decoy system designed to attract and monitor cyber attackers","A tool used to encrypt data","A system that blocks all traffic","A technique used to speed up websites"],correct:0,anchor:"A honeypot is a decoy system — it lures attackers, allowing defenders to study their tools and techniques."},
+      {q:"What is one way cyber intelligence helps prevent financial fraud?",opts:["By analyzing transaction patterns to detect anomalies","By increasing phishing attempts","By blocking all financial transactions","By eliminating encryption"],correct:0,anchor:"Analyzing transaction patterns detects anomalies (unusual amounts, locations) that indicate fraud."},
+      {q:"How does endpoint security contribute to cyber intelligence?",opts:["It monitors and protects individual devices from cyber threats","It slows down network security","It eliminates the need for antivirus software","It prevents organizations from using AI"],correct:0,anchor:"Endpoint security monitors individual devices — generating telemetry data that feeds into cyber intelligence."},
+      {q:"How does Zero Trust Security improve cyber intelligence?",opts:["By enforcing continuous authentication and strict access controls","By removing all security measures","By allowing unlimited access to all systems","By preventing organizations from using encryption"],correct:0,anchor:"Zero Trust: 'never trust, always verify' — continuous authentication enforces strict access controls."},
+      {q:"What role does Blockchain play in cyber intelligence?",opts:["Ensuring data integrity and security.","Slowing down cyber intelligence operations","Eliminating the need for threat intelligence feeds","Allowing cybercriminals to hide online"],correct:0,anchor:"Blockchain ensures data integrity — its immutable ledger guarantees intelligence data hasn't been tampered with."},
+      {q:"What is the function of Indicators of Attack (IoA)?",opts:["Identifying tactics used by cybercriminals.","Preventing organizations from collecting intelligence","Increasing the spread of ransomware","Eliminating all cybersecurity tools"],correct:0,anchor:"IoAs identify attacker tactics and techniques — focusing on behavior rather than specific artifacts."},
+      {q:"What is an example of structured data?",opts:["SQL databases.","Social media posts","Emails","Voice recordings"],correct:0,anchor:"SQL databases contain structured data — organized in tables with defined schemas, easily queried."},
+      {q:"Which of these is NOT a cyber-intelligence data collection technique?",opts:["SIGINT","OSINT","GPSINT.","HUMINT"],correct:2,anchor:"GPSINT is not a recognized intelligence collection discipline. SIGINT, OSINT, and HUMINT are standard."},
+      {q:"What is one key benefit of cyber threat intelligence sharing?",opts:["It helps organizations collaborate and strengthen security.","It eliminates the need for cybersecurity professionals","It increases cyber-attack risks","It slows down security response times"],correct:0,anchor:"Threat intelligence sharing enables collaboration — shared knowledge strengthens all participants' defenses."},
+      {q:"What is the role of behavior analytics in cybersecurity?",opts:["Detecting anomalies in user activity.","Increasing the number of cyber-attacks","Preventing organizations from using AI","Blocking all access to online systems"],correct:0,anchor:"Behavior analytics detects anomalies in user activity — identifying compromised accounts and insider threats."},
+      {q:"What is the biggest risk of storing cyber intelligence data?",opts:["Unauthorized access and data breaches","Increased website traffic","Slower internet speeds","Eliminating encryption"],correct:0,anchor:"Unauthorized access and data breaches are the biggest storage risks — intelligence data is a high-value target."},
+      {q:"What is one of the biggest challenges of real-time cyber intelligence?",opts:["The speed of data analysis","The availability of cybersecurity professionals","The cost of implementing advanced security solutions","The lack of threat intelligence sources"],correct:2,anchor:"The high cost of implementing advanced real-time solutions is a major barrier for many organizations."},
+      {q:"What is the purpose of an Intrusion Detection System (IDS)?",opts:["To detect unauthorized access and security breaches","To increase network speeds","To block all website traffic","To replace all cybersecurity professionals"],correct:0,anchor:"IDS detects unauthorized access and security breaches — monitoring traffic and alerting on suspicious activity."},
+      {q:"How does Artificial Intelligence (AI) contribute to cyber intelligence?",opts:["By automating threat detection and response","By slowing down security updates","By eliminating the need for encryption","By increasing the risk of cyber attacks"],correct:0,anchor:"AI automates threat detection and response — reducing reaction time from hours to seconds."},
+      {q:"What does cyber-intelligence fusion refer to?",opts:["Combining multiple intelligence sources for better analysis.","Increasing the number of security vulnerabilities","Eliminating the need for security professionals","Preventing organizations from using threat intelligence"],correct:0,anchor:"Cyber intelligence fusion combines multiple sources (OSINT, SIGINT, HUMINT) for comprehensive analysis."},
+      {q:"How does cyber-intelligence help in national security?",opts:["By monitoring cyber threats against critical infrastructure","By eliminating encryption from all systems","By blocking access to all online networks","By slowing down security responses"],correct:0,anchor:"National security cyber intelligence monitors threats against critical infrastructure — power grids, military, finance."},
+      {q:"What is one of the major concerns of using AI in cyber intelligence?",opts:["The possibility of bias in threat detection algorithms","The elimination of cybersecurity professionals","The increase of cyber-attacks","The removal of all security frameworks"],correct:0,anchor:"AI bias in threat detection can produce false positives (flagging innocents) or miss real threats (false negatives)."},
+      {q:"What is a major limitation of OSINT in cyber intelligence?",opts:["Difficulty verifying the credibility of information","The inability to collect data from social media","The elimination of threat intelligence feeds","The blocking of encrypted communication"],correct:0,anchor:"OSINT's main limitation: verifying credibility — public information can be false, outdated, or deliberately misleading."},
+      {q:"What does real-time threat intelligence allow organizations to do?",opts:["Respond to cyber threats quickly","eliminate all cybersecurity measures","prevent data encryption","increase cyber-attack risks"],correct:0,anchor:"Real-time threat intelligence enables rapid response — stopping attacks as they unfold, not after damage is done."},
+      {q:"What is the function of a cyber-fusion center?",opts:["To integrate intelligence from multiple sources for better decision-making","To eliminate all cybersecurity tools","To slow down response times","To remove all security measures"],correct:0,anchor:"Cyber fusion centers integrate intelligence from all sources — providing unified situational awareness."},
+      {q:"Why is encryption critical in cyber intelligence?",opts:["It protects sensitive data from unauthorized access","It slows down security systems","It increases the risk of data breaches","It eliminates the need for cybersecurity tools"],correct:0,anchor:"Encryption protects sensitive intelligence data — without it, threat intelligence itself could be stolen."},
+      {q:"What is a key benefit of integrating cyber intelligence with cybersecurity operations?",opts:["It enhances proactive threat detection and response","It increases security vulnerabilities","It eliminates all security tools","It slows down cyber intelligence processing"],correct:0,anchor:"Integration enables proactive threat detection — intelligence informs security operations before attacks occur."},
+      {q:"Which technologies contribute to improving cyber-intelligence analysis?",opts:["Artificial Intelligence (AI)","Machine Learning (ML)","Big Data Analytics","All of them"],correct:3,anchor:"AI, ML, and Big Data Analytics all contribute to improving cyber intelligence analysis — they work together."},
+      {q:"What are common sources of cyber intelligence data collection?",opts:["Open Source Intelligence (OSINT)","Signals Intelligence (SIGINT)","Human Intelligence (HUMINT)","All of them"],correct:3,anchor:"OSINT, SIGINT, and HUMINT are all standard cyber intelligence data collection sources."},
+      {q:"Which of the following are benefits of real-time threat intelligence?",opts:["Faster response to cyber threats","Better risk management and decision-making","Enhanced protection against emerging cyber-threats","All of them"],correct:3,anchor:"Real-time threat intelligence provides all three benefits: speed, better decisions, and enhanced protection."}
+    ]
+  },
+  {
+    name: "Lecture 7 — National Security & Corporate Intelligence",
+    questions: [
+      {q:"What is the role of cyber intelligence in national security?",opts:["To develop social media campaigns","To detect, prevent, and respond to cyber threats","To regulate internet access","To manage cloud storage"],correct:1,anchor:"National security cyber intelligence: detect, prevent, and respond to cyber threats targeting the nation."},
+      {q:"How do governments use cyber-intelligence for early threat detection?",opts:["By monitoring network traffic and detecting anomalies","By blocking all foreign websites","By shutting down the internet in case of an attack","By relying solely on private companies"],correct:0,anchor:"Governments monitor network traffic and detect anomalies — early warning systems for cyber attacks on national infrastructure."},
+      {q:"What are national cybersecurity agencies responsible for?",opts:["Selling cybersecurity products","Monitoring cyber-threats and responding to cyber incidents","Managing employee salaries","Conducting online surveys"],correct:1,anchor:"National cybersecurity agencies (e.g., CISA, NCSC) monitor threats and coordinate incident response."},
+      {q:"What is a cyber-fusion center?",opts:["a platform for social media influencers","a centralized unit integrating intelligence and cybersecurity efforts","A cloud storage facility for government data","a type of malware"],correct:1,anchor:"Cyber fusion center = centralized unit where intelligence and cybersecurity teams collaborate in real time."},
+      {q:"How do intelligence-sharing mechanisms help in cyber-defense?",opts:["By keeping data secret","By allowing collaboration between governments and industries","By eliminating cybersecurity laws","By restricting access to digital platforms"],correct:1,anchor:"Intelligence sharing enables public-private collaboration — governments and industries defending together."},
+      {q:"Why do corporations invest in cyber-intelligence?",opts:["to protect intellectual property and financial assets","to promote brand awareness","To increase employee engagement","to improve office productivity"],correct:0,anchor:"Corporations invest to protect intellectual property (trade secrets, R&D) and financial assets from theft."},
+      {q:"What are Threat Intelligence Platforms (TIPs)?",opts:["Social media platforms for cybersecurity experts","Tools that collect, analyze, and share cyber-threat intelligence","A type of cybersecurity malware","Websites for anonymous data leaks"],correct:1,anchor:"TIPs collect, analyze, and share cyber threat intelligence — centralizing the intelligence workflow."},
+      {q:"How do Security Information and Event Management (SIEM) systems assist businesses?",opts:["By detecting and analyzing cybersecurity threats in real time","By monitoring employee work hours","By enhancing customer engagement","By automating HR operations"],correct:0,anchor:"SIEM detects and analyzes cybersecurity threats in real time — the core of enterprise security operations."},
+      {q:"What are insider threats?",opts:["Threats from external hackers","Threats posed by employees, contractors, or associates","Threats caused by software bugs","Threats from outdated operating systems"],correct:1,anchor:"Insider threats come from employees, contractors, or associates who misuse their authorized access."},
+      {q:"How can businesses mitigate insider threats?",opts:["By implementing user behavior analytics and employee awareness training","By eliminating cybersecurity policies","By blocking all internet access","By avoiding security audits"],correct:0,anchor:"User behavior analytics detects anomalies; awareness training reduces accidental insider incidents."},
+      {q:"What is cyber-espionage?",opts:["The act of using digital means to steal sensitive information","The act of hacking social media accounts","The use of cybersecurity software","The process of developing firewalls"],correct:0,anchor:"Cyber-espionage uses digital means (hacking, malware) to steal classified or proprietary information."},
+      {q:"Who are common perpetrators of cyber espionage?",opts:["Nation-states, cybercriminal groups, and corporate competitors","Social media users","IT department employees","Online advertisers"],correct:0,anchor:"Nation-states (APTs), criminal groups, and competitors all engage in cyber espionage for different motives."},
+      {q:"What is an Advanced Persistent Threat (APT)?",opts:["A prolonged and targeted cyberattack.","A type of antivirus software","A secure encryption protocol","A social media security feature"],correct:0,anchor:"APT = prolonged, targeted attack — typically by nation-states, maintaining stealth access for months or years."},
+      {q:"How do nations use cyber-intelligence for military operations?",opts:["To track enemy activities and disrupt digital infrastructure","To conduct social media marketing campaigns","To improve software development","To regulate e-commerce transactions"],correct:0,anchor:"Military cyber intelligence tracks enemy activities and can disrupt adversarial digital infrastructure in conflicts."},
+      {q:"What role does AI play in cyber-warfare?",opts:["It automates threat detection and predicts attack patterns","It replaces cybersecurity professionals","It blocks all cyberattacks automatically","It prevents employees from using social media"],correct:0,anchor:"AI in cyber-warfare automates threat detection and predicts attack patterns — accelerating offensive and defensive operations."},
+      {q:"How does AI enhance cyber-intelligence?",opts:["By automating threat analysis and predicting cyber-threats","By eliminating the need for cybersecurity experts","By making networks unhackable","By increasing the speed of internet browsing"],correct:0,anchor:"AI automates threat analysis and predicts cyber threats — transforming raw data into actionable intelligence."},
+      {q:"What are the risks of AI in cybersecurity?",opts:["AI can be used by attackers to develop advanced cyber-threats","AI eliminates all cyber-threats automatically","AI slows down cybersecurity operations","AI is only used for defensive security measures"],correct:0,anchor:"AI is dual-use — attackers use AI to develop more sophisticated, evasive threats (AI-powered malware)."},
+      {q:"What is quantum computing's impact on cyber-intelligence?",opts:["It can break traditional encryption methods","It replaces cybersecurity professionals","It prevents cybercrime completely","It enhances social media security"],correct:0,anchor:"Quantum computing can break RSA/AES encryption — threatening all currently secured communications."},
+      {q:"How are organizations preparing for quantum threats?",opts:["By developing quantum-resistant encryption","By increasing firewall settings","By avoiding cloud storage","By blocking all encrypted communications"],correct:0,anchor:"Post-quantum cryptography (quantum-resistant algorithms) is being developed to withstand quantum attacks."},
+      {q:"What are quantum cryptographic techniques?",opts:["Encryption methods using quantum mechanics for secure communication","Traditional password-based security methods","Firewalls enhanced by AI","Methods to detect phishing emails"],correct:0,anchor:"Quantum cryptography (e.g., QKD) uses quantum mechanics properties for theoretically unbreakable encryption."},
+      {q:"Why is cyber-intelligence crucial in the financial sector?",opts:["To detect fraudulent transactions and protect customer data","To manage stock market investments","To increase bank interest rates","To monitor customer savings accounts"],correct:0,anchor:"Financial sector cyber intelligence detects fraud in real time and protects sensitive customer financial data."},
+      {q:"What is the role of biometric security measures in cybersecurity?",opts:["To provide authentication through fingerprint and facial recognition","To replace all password-based security","To monitor social media accounts","To prevent physical security breaches"],correct:0,anchor:"Biometrics (fingerprint, facial recognition) provide strong authentication — harder to steal than passwords."},
+      {q:"How does AI contribute to financial cybersecurity?",opts:["By detecting fraudulent transactions using behavioral analysis","By automating customer service chatbots","By improving mobile banking experience","By monitoring ATM transactions manually."],correct:0,anchor:"AI detects fraudulent transactions using behavioral analysis — flagging unusual patterns in real time."},
+      {q:"What are common cyber-threats to financial institutions?",opts:["Ransomware, phishing, and insider threats","Power outages and bank robberies","Server maintenance issues","System software updates"],correct:0,anchor:"Financial institutions face ransomware (disruption), phishing (credential theft), and insider threats (fraud)."},
+      {q:"What is the primary focus of cyber warfare?",opts:["To improve public relations","To disrupt, damage, or destroy an adversary's infrastructure","To enhance employee productivity","To develop new technologies"],correct:1,anchor:"Cyber warfare aims to disrupt, damage, or destroy adversary infrastructure — power grids, military systems, communications."},
+      {q:"Which of the following is a key trend shaping the future of cyber intelligence?",opts:["Social media marketing","Quantum computing.","Employee wellness programs","Financial auditing"],correct:1,anchor:"Quantum computing is a key future trend — it will both threaten current security and enable new defenses."},
+      {q:"What is the primary goal of cyber espionage?",opts:["To improve public relations","To gather classified or proprietary information","To enhance employee productivity","To develop new technologies"],correct:1,anchor:"Cyber espionage's primary goal: gather classified or proprietary information without detection."},
+      {q:"Which of the following is a common tactic used in cyber-espionage?",opts:["Spear phishing.","Social media marketing","Employee training","Financial auditing"],correct:0,anchor:"Spear phishing targets specific individuals with customized deception — a primary espionage entry technique."},
+      {q:"What is the role of AI in cyber-intelligence?",opts:["To automate threat detection and response","To manage employee schedules","To design marketing campaigns","To develop new hardware"],correct:0,anchor:"AI automates threat detection and response — processing threats at machine speed for real-time defense."},
+      {q:"Which of the following is a major cyber-threat to national defense?",opts:["Employee turnover","Nation-state cyber-attacks","Social media trends","Financial audits"],correct:1,anchor:"Nation-state cyber attacks are the most sophisticated and well-resourced threat to national defense."},
+      {q:"What is the purpose of a Threat Intelligence Platform (TIP)?",opts:["To manage employee benefits","To automate threat intelligence collection and analysis","To design marketing strategies","To develop new software"],correct:1,anchor:"TIPs automate collection and analysis of threat intelligence — centralizing the intelligence workflow."},
+      {q:"Which of the following is a key challenge in implementing Corporate Threat Intelligence Programs?",opts:["Employee satisfaction","Data overload.","Social media engagement","Financial auditing"],correct:1,anchor:"Data overload is a top corporate challenge — too much threat data, not enough analysts to process it."},
+      {q:"What is the impact of deepfake technology on cyber-intelligence?",opts:["It enhances cybersecurity measures","It enables more realistic digital deception and misinformation","It has no impact on cybersecurity","It improves corporate marketing strategies"],correct:1,anchor:"Deepfakes enable realistic deception — fake video/audio of executives authorizing fraud or spreading disinformation."},
+      {q:"Which of the following is a major application of Blockchain in cyber-intelligence?",opts:["Automating human resource processes","Enhancing supply chain security and data integrity","Managing cybersecurity training sessions","Increasing sales in e-commerce platforms"],correct:1,anchor:"Blockchain enhances supply chain security — verifying the integrity of software and hardware components."},
+      {q:"How does predictive analysis support cyber-intelligence?",opts:["By forecasting potential cyber-threats before they occur","By monitoring social media trends","By preventing all cyberattacks permanently","By eliminating the need for cybersecurity professionals"],correct:0,anchor:"Predictive analysis forecasts threats before they occur — enabling preemptive defensive action."},
+      {q:"What is the primary advantage of AI-driven cybersecurity?",opts:["It eliminates the need for human analysts","It enhances real-time threat detection and response","It increases system vulnerabilities","It slows down cybersecurity operations"],correct:1,anchor:"AI-driven cybersecurity's primary advantage: real-time threat detection and response at machine speed."},
+      {q:"Which sector is most vulnerable to ransomware attacks?",opts:["Banking and financial institutions","Travel and tourism industry","Entertainment sector","Online gaming industry"],correct:0,anchor:"Banking and financial institutions are prime ransomware targets — high-value data and strong motivation to pay."},
+      {q:"How does the dark web contribute to cybercrime?",opts:["By providing a platform for selling stolen data and illicit cyber-tools","By helping law enforcement agencies prevent cyberattacks","By monitoring cybersecurity professionals","By promoting ethical hacking"],correct:0,anchor:"The dark web is a marketplace for stolen data, malware, ransomware-as-a-service, and criminal tools."},
+      {q:"What is a major challenge in implementing AI-based cybersecurity solutions?",opts:["High cost and complexity.","Lack of internet access","Limited application in cybersecurity","Lack of interest from organizations"],correct:0,anchor:"High cost and complexity are the top barriers to AI cybersecurity adoption — especially for SMEs."}
+    ]
+  },
+  {
+    name: "Lecture 8 — Cybersecurity Operations & Fundamentals",
+    questions: [
+      {q:"What is the purpose of cyber threat intelligence sharing?",opts:["To improve collaboration among organizations in preventing cyber-threats","To increase sales in cybersecurity software","To monitor employee social media accounts","To restrict internet access globally"],correct:0,anchor:"Threat intelligence sharing improves collaboration — one organization's discovery protects all members of the sharing community."},
+      {q:"What is the primary function of zero-trust security architecture?",opts:["To trust all internal network traffic","To restrict access and continuously verify users and devices","To allow unrestricted access to corporate data","To enhance marketing strategies"],correct:1,anchor:"Zero Trust: 'never trust, always verify' — every user and device is authenticated continuously, regardless of location."},
+      {q:"What is one of the major risks associated with cloud computing?",opts:["Increased physical theft of data","Data breaches due to misconfigured cloud settings","The need for more office space","Decreased use of automation"],correct:1,anchor:"Misconfigured cloud settings (public S3 buckets, open APIs) are the leading cause of cloud data breaches."},
+      {q:"What is a common method used in financial fraud detection?",opts:["Predictive analytics and AI-driven monitoring.","manual data entry verification.","reducing cybersecurity spending","encouraging customers to share personal information"],correct:0,anchor:"Predictive analytics and AI detect fraud by flagging transactions that deviate from normal behavioral patterns."},
+      {q:"Which cybersecurity framework is commonly used to manage cyber-risks?",opts:["ISO 27001.","SEO Optimization Guide","Business Development Model","Social Media Policy Handbook"],correct:0,anchor:"ISO 27001 is the international standard for information security management systems (ISMS)."},
+      {q:"How does cyber-intelligence support law enforcement agencies?",opts:["By tracking and analyzing cybercriminal activities","By increasing taxation rates.","By monitoring employees' productivity.","By regulating internet speed."],correct:0,anchor:"Cyber intelligence supports law enforcement by tracking and analyzing cybercriminal activities for prosecution."},
+      {q:"What is the primary challenge in cyber-intelligence sharing between organizations?",opts:["Lack of cooperation and trust.","Increased marketing costs","Decrease in cybersecurity threats","Increased reliance on social media platforms"],correct:0,anchor:"Lack of cooperation and trust is the primary barrier — organizations fear sharing sensitive data with competitors."},
+      {q:"What is a common indicator of compromise (IoC) in cyber-intelligence?",opts:["Unusual network traffic patterns.","Increase in company profits","Decrease in cybersecurity threats","Faster software updates"],correct:0,anchor:"Unusual network traffic patterns (unexpected data flows, port scans) are classic IoCs indicating compromise."},
+      {q:"How can organizations mitigate the risk of phishing attacks?",opts:["Employee training and email filtering systems.","Increasing advertising campaigns","Reducing IT department size","Encouraging employees to ignore security protocols"],correct:0,anchor:"Employee training (awareness) + email filtering (technical control) is the two-layer defense against phishing."},
+      {q:"What is the role of endpoint detection and response (EDR) systems?",opts:["To detect, investigate, and respond to threats at device endpoints","To develop new hardware components","To increase social media engagement","To manage corporate marketing campaigns"],correct:0,anchor:"EDR continuously monitors endpoints — detecting threats, collecting forensics, and enabling rapid response."},
+      {q:"What makes ransomware a significant cybersecurity threat?",opts:["It encrypts files and demands ransom payments","It speeds up system performance","It enhances employee communication","It improves software efficiency"],correct:0,anchor:"Ransomware encrypts victim files and demands payment — combining disruption with extortion."},
+      {q:"What is a key benefit of cyber threat hunting?",opts:["Proactively identifying and mitigating threats before an attack occurs","Increasing product sales","Decreasing cybersecurity budgets","Reducing the use of encryption"],correct:0,anchor:"Threat hunting proactively finds threats before they cause damage — closing the gap between compromise and detection."},
+      {q:"What is a botnet used for in cybercrime?",opts:["Coordinating large-scale automated cyberattacks","Improving software development","Enhancing customer service","Increasing social media reach"],correct:0,anchor:"Botnets coordinate massive automated attacks (DDoS, spam, credential stuffing) using thousands of infected devices."},
+      {q:"Which technology is commonly used to secure online transactions?",opts:["Blockchain.","Digital marketing","Social media algorithms","Content management systems"],correct:0,anchor:"Blockchain secures online transactions through cryptographic verification and immutable transaction records."},
+      {q:"How do security operation centers (SOCs) contribute to cybersecurity?",opts:["By continuously monitoring and responding to threats","By managing employee salaries","By restricting internet access","By developing customer service strategies"],correct:0,anchor:"SOCs continuously monitor the threat landscape and coordinate incident response — the 24/7 security command center."},
+      {q:"What is one of the main advantages of multifactor authentication (MFA)?",opts:["Adds an extra layer of security by requiring multiple verification methods","Speeds up the login process","Allows users to bypass security measures","Eliminates the need for passwords"],correct:0,anchor:"MFA adds extra security layers — even if a password is stolen, attackers still cannot authenticate."},
+      {q:"How do cybercriminals use social engineering attacks?",opts:["By manipulating individuals into revealing sensitive information","By developing security software","By improving network security","By strengthening encryption protocols"],correct:0,anchor:"Social engineering manipulates humans psychologically — bypassing technical controls through deception."},
+      {q:"What is the impact of AI-driven cybersecurity automation?",opts:["Faster detection and mitigation of cyber threats","Increased reliance on manual threat detection","Slower response times to cyber incidents","Less efficient security measures"],correct:0,anchor:"AI automation dramatically accelerates detection and mitigation — reducing mean time to detect (MTTD) from days to minutes."},
+      {q:"How does cyber-intelligence help protect critical infrastructure?",opts:["By monitoring for cyber-threats targeting essential systems","By regulating online shopping trends","By enhancing advertising strategies","By increasing customer engagement"],correct:0,anchor:"Critical infrastructure protection requires constant monitoring — power, water, and transport systems are prime targets."},
+      {q:"What is a major concern regarding AI-generated deepfake videos?",opts:["They can be used for disinformation and social manipulation","They improve cybersecurity systems","They enhance employee training programs","They reduce cyber-threats"],correct:0,anchor:"Deepfake videos are powerful disinformation tools — fake executive videos can authorize fraud or spread propaganda."},
+      {q:"What does a firewall do?",opts:["Blocks unauthorized access.","Speeds up the internet","Deletes viruses automatically","Monitors social media activity"],correct:0,anchor:"Firewalls block unauthorized access — filtering network traffic based on rules to prevent intrusions."},
+      {q:"What is the main purpose of antivirus software?",opts:["To create passwords","To detect and remove malware.","To increase computer speed","To delete unnecessary files"],correct:1,anchor:"Antivirus detects and removes malware — scanning files and processes for known malicious signatures."},
+      {q:"What is the safest way to handle suspicious emails?",opts:["Open the attachments","Click on all links to check them","Ignore and delete them.","Reply to the sender for clarification"],correct:2,anchor:"Ignoring and deleting suspicious emails prevents phishing clicks, malware execution, and credential theft."},
+      {q:"What is phishing?",opts:["A technique to catch online criminals","A method to steal personal information through fake emails","A new type of encryption","A way to speed up internet browsing"],correct:1,anchor:"Phishing uses fake emails (impersonating trusted entities) to steal credentials or install malware."},
+      {q:"Which of the following is a strong password example?",opts:["qwerty","password123","A@bC#123!","111111"],correct:2,anchor:"A@bC#123! is strong — it combines uppercase, lowercase, numbers, and special characters for complexity."},
+      {q:"What is a VPN used for?",opts:["To increase gaming performance","To secure internet connections and protect privacy","To block advertisements","To speed up downloads"],correct:1,anchor:"VPNs encrypt internet traffic and mask IP addresses — protecting privacy on public and unsecured networks."},
+      {q:"What does MFA stand for in cybersecurity?",opts:["Most Frequently Accessed","Multi-Factor Authentication.","Malware Filtering Application","Mobile File Access"],correct:1,anchor:"MFA = Multi-Factor Authentication — requiring two or more verification methods (something you know, have, or are)."},
+      {q:"What is social engineering in cybersecurity?",opts:["Using social media for marketing","Manipulating people to gain confidential information","Enhancing teamwork within organizations","Creating secure social media accounts"],correct:1,anchor:"Social engineering manipulates human psychology to extract confidential information — bypassing technical security."},
+      {q:"What does ransomware do?",opts:["Using social media for marketing","Blocks access to data until a ransom is paid","Deletes unnecessary files","Protects against phishing attacks"],correct:1,anchor:"Ransomware blocks access to data (via encryption) and demands payment to restore it."},
+      {q:"What is the best way to protect sensitive data?",opts:["Share it with trusted colleagues via email","Use encryption.","Store it in an unsecured cloud drive","Write it down on paper"],correct:1,anchor:"Encryption is the best protection — even if data is stolen, encrypted data cannot be read without the key."},
+      {q:"How often should you update your passwords?",opts:["Once every 5 years","Only when you forget them","Regularly, at least every few months","Never, if they are strong"],correct:2,anchor:"Regular password updates reduce the window of exposure if a password is compromised without your knowledge."},
+      {q:"What is a botnet?",opts:["A network of infected computers controlled by a hacker","A security system for networks","A government cyber-agency","A cloud storage service"],correct:0,anchor:"A botnet is a network of compromised computers (bots) remotely controlled by an attacker (botmaster)."},
+      {q:"What should you do if your computer gets infected with malware?",opts:["Ignore it and keep using the device","Disconnect from the internet and run an antivirus scan","Restart the computer multiple times","Open more applications to try and stop the virus"],correct:1,anchor:"Disconnect first (stops data exfiltration/spread), then run an antivirus scan to identify and remove the malware."},
+      {q:"What is the purpose of a cybersecurity audit?",opts:["To check the effectiveness of security measures","To install new software","To fix hardware issues","To increase internet speed"],correct:0,anchor:"A cybersecurity audit evaluates the effectiveness of security controls — identifying gaps and compliance issues."},
+      {q:"What is an example of a cyber-threat?",opts:["A strong firewall","A phishing email.","A secured VPN connection","A complex password"],correct:1,anchor:"A phishing email is a cyber-threat — an attempt to deceive users into revealing credentials or installing malware."},
+      {q:"Why is backing up data important?",opts:["To prevent phishing attacks","To recover files in case of data loss","To speed up the computer","To increase storage space"],correct:1,anchor:"Data backups enable recovery from ransomware, hardware failure, or accidental deletion — essential resilience."},
+      {q:"How can you identify a secure website?",opts:["The URL starts with \"http\"","The URL starts with \"https\" and has a padlock symbol","The website has many advertisements","The website loads slowly"],correct:1,anchor:"HTTPS + padlock = TLS/SSL encryption is active — data between you and the site is encrypted in transit."},
+      {q:"What is the first step in responding to a cybersecurity breach?",opts:["Ignore the problem","Unplug the computer and hope it stops","Inform the IT/security team immediately","Post about it on social media"],correct:2,anchor:"Inform IT/security immediately — rapid response reduces damage, and trained responders follow proper procedures."},
+      {q:"What is a cyberattack?",opts:["A computer malfunction","A software update","An intentional attempt to steal or damage data","A new social media trend"],correct:2,anchor:"A cyberattack is an intentional attempt to steal, damage, or disrupt data and systems."},
+      {q:"Why should you avoid using public Wi-Fi for sensitive transactions?",opts:["It is too slow","It has too many users","Hackers can intercept your data.","It blocks access to some websites"],correct:2,anchor:"Public Wi-Fi is unencrypted — man-in-the-middle attacks can intercept your sensitive data in transit."},
+      {q:"What is an example of a secure authentication method?",opts:["Using the same password for all accounts","Multi-Factor Authentication (MFA).","Writing your password on a sticky note","Sharing login details with colleagues"],correct:1,anchor:"MFA is the most secure authentication method — multiple factors prevent unauthorized access even with stolen passwords."},
+      {q:"What is the role of a cybersecurity professional?",opts:["To protect systems and data from cyber-threats","To develop new computer games","To create social media accounts","To manage office supplies"],correct:0,anchor:"Cybersecurity professionals protect systems, networks, and data from cyber threats — the digital defenders."},
+      {q:"What is the best way to prevent identity theft online?",opts:["share personal information only with friends","Use strong, unique passwords and enable MFA","use the same password for every account","post your personal details only on secure websites"],correct:1,anchor:"Strong unique passwords + MFA is the best identity theft prevention — harder to crack, harder to bypass."},
+      {q:"What is a common sign of a phishing email?",opts:["Share personal information only with friends","A request for sensitive information","A friendly greeting","An email from a friend"],correct:1,anchor:"Requesting sensitive information (passwords, credit cards) via email is the classic phishing red flag."},
+      {q:"Why should you lock your devices when not in use?",opts:["To save battery life","To prevent unauthorized access","A friendly greeting","To avoid overheating"],correct:1,anchor:"Locking devices prevents unauthorized physical access — protecting data even if a device is left unattended."}
+    ]
+  },
+  {
+    name: "Lecture 9 — Advanced Cyber Intelligence Concepts",
+    questions: [
+      {q:"What is the primary goal of cyber intelligence?",opts:["Enhancing video game security","Predicting and preventing cyber-threats","Managing social media profiles","Developing new mobile applications"],correct:1,anchor:"The primary goal of cyber intelligence: predict and prevent cyber threats before they cause damage."},
+      {q:"Which of the following is NOT a primary category of cyber threat actors?",opts:["Cybercriminals","Nation-state hackers","Social media influencers.","Hacktivists"],correct:2,anchor:"Social media influencers are not cyber threat actors. Threat actors are: cybercriminals, nation-state hackers, and hacktivists."},
+      {q:"What type of cyber intelligence focuses on publicly available sources?",opts:["Signals Intelligence (SIGINT)","Open Source Intelligence (OSINT).","Human Intelligence (HUMINT)","Artificial Intelligence (AI) Intelligence"],correct:1,anchor:"OSINT focuses on publicly available sources — no classified or covert collection required."},
+      {q:"What is a key component of cyber intelligence?",opts:["data collection and analysis","social media marketing","Web development","graphic design"],correct:0,anchor:"Data collection and analysis is the fundamental component — without it, there is no intelligence."},
+      {q:"What is a primary challenge in cyber-intelligence?",opts:["Rapidly evolving threats.","Limited internet acces","Lack of cybercriminals","Decrease in digital data"],correct:0,anchor:"Rapidly evolving threats are the #1 challenge — attackers constantly develop new techniques to evade defenses."},
+      {q:"What does cyber-intelligence primarily aim to protect?",opts:["music streaming services","personal, corporate, and national security data","video game leaderboards","public entertainment content"],correct:1,anchor:"Cyber intelligence protects personal, corporate, and national security data — all three tiers of data."},
+      {q:"What is the significance of big data in cyber-intelligence?",opts:["To store more movies and songs","To analyze large datasets for detecting cyber-threats","To improve website loading speed","To promote social media content"],correct:1,anchor:"Big data analysis detects cyber threats hidden in massive datasets — patterns invisible to manual analysis."},
+      {q:"What does OSINT stand for?",opts:["Offline Social Integration Network Technology","Open Source Intelligence.","Operational Security Integration","Official System Network Tracking"],correct:1,anchor:"OSINT = Open Source Intelligence — intelligence derived from publicly available sources."},
+      {q:"What is the role of Artificial Intelligence (AI) in cyber-intelligence?",opts:["Enhancing automated threat detection","Designing website layouts","Promoting cybersecurity training","Managing social media campaigns"],correct:0,anchor:"AI enhances automated threat detection — processing data at scale and speed beyond human capability."},
+      {q:"What is a cyber-kill chain used for?",opts:["Identifying stages of a cyber-attack","Managing online transactions","Enhancing website security","Filtering social media content"],correct:0,anchor:"The cyber kill chain maps the stages of an attack — from reconnaissance to final objective — helping defenders interrupt each stage."},
+      {q:"What is the primary function of cyber threat intelligence?",opts:["Designing new cybersecurity software","Gathering and analyzing data to identify threats.","Creating social media marketing campaigns","Managing network infrastructure"],correct:1,anchor:"Cyber threat intelligence gathers and analyzes data to identify threats — the core intelligence function."},
+      {q:"What does SIGINT stand for?",opts:["Security Intelligence Gateway","Signals Intelligence.","System Information Gathering Network","Secure Internet Governance"],correct:1,anchor:"SIGINT = Signals Intelligence — collecting intelligence from electronic signals, communications, and network traffic."},
+      {q:"What is a major ethical concern in cyber-intelligence?",opts:["Data privacy violations.","Increasing network speeds","Expanding cloud storage","Improving social media algorithms"],correct:0,anchor:"Data privacy violations are the major ethical concern — surveillance may infringe on civil liberties."},
+      {q:"What does cyber-intelligence use machine learning for?",opts:["Predicting and analyzing cyber-threats.","Designing new website templates","Creating email marketing campaigns","Managing cryptocurrency transactions"],correct:0,anchor:"Machine learning predicts and analyzes cyber threats — identifying patterns in massive datasets automatically."},
+      {q:"What is the importance of encryption in cyber-intelligence?",opts:["Protecting sensitive data from unauthorized access","Increasing internet speed","Enhancing video resolution","Managing cloud storage"],correct:0,anchor:"Encryption protects sensitive intelligence data — ensuring collected information cannot be stolen or read."},
+      {q:"What role does Blockchain play in cyber-intelligence?",opts:["Ensuring data integrity and secure transactions","Increasing website traffic","Designing user-friendly interfaces","Managing cloud storage"],correct:0,anchor:"Blockchain ensures data integrity — its immutable ledger prevents tampering with intelligence records."},
+      {q:"What is a botnet?",opts:["A network of infected computers controlled by cybercriminals","A cybersecurity training program","A tool for graphic design","A type of antivirus software"],correct:0,anchor:"A botnet is a network of compromised computers controlled by cybercriminals for automated attacks."},
+      {q:"What is cyber-forensics used for?",opts:["Investigating cybercrimes and analyzing digital evidence","Creating new social media accounts","Developing mobile applications","Enhancing website layouts"],correct:0,anchor:"Cyber-forensics investigates cybercrimes and analyzes digital evidence for incident response and prosecution."},
+      {q:"Which of the following are considered cyber-threat actors?",opts:["Cybercriminals","Nation-state hackers","Insider threats","All of the above"],correct:3,anchor:"All three — cybercriminals, nation-state hackers, and insider threats — are recognized threat actor categories."},
+      {q:"What are common methods of cyber intelligence data collection?",opts:["OSINT","Dark web monitoring","Threat intelligence feeds","All of the above"],correct:3,anchor:"OSINT, dark web monitoring, and threat intelligence feeds are all standard data collection methods."},
+      {q:"Which of the following are ethical concerns in cyber-intelligence?",opts:["Privacy violations","Bias in AI models","Government surveillance overreach","All of the above"],correct:3,anchor:"All three — privacy violations, AI bias, and surveillance overreach — are recognized ethical concerns."},
+      {q:"Which of the following is a benefit of AI in cyber-intelligence?",opts:["Faster threat detection","Reduced human workload","Automated response to attacks","All of the above"],correct:3,anchor:"AI provides all three benefits: faster detection, reduced workload, and automated response."},
+      {q:"Which of the following technologies is expected to impact cyber-intelligence?",opts:["AI and machine learning","Quantum computing","Blockchain","All of the above"],correct:3,anchor:"AI/ML, quantum computing, and blockchain will all significantly impact cyber intelligence."},
+      {q:"What is the purpose of a zero-trust security model?",opts:["Requiring continuous authentication and verification","Allowing unrestricted access to all users","Securing only external threats","Eliminating the need for cybersecurity training"],correct:0,anchor:"Zero Trust requires continuous authentication — 'never trust, always verify' every access request."},
+      {q:"What is an Advanced Persistent Threat (APT)?",opts:["A long-term targeted cyber-attack by a sophisticated actor","A temporary network outage","A short-lived malware infection","A minor phishing attempt"],correct:0,anchor:"APT = long-term targeted attack by sophisticated actors (usually nation-states) maintaining persistent stealth access."},
+      {q:"Which cybersecurity framework is widely used for managing cybersecurity risk?",opts:["NIST Cybersecurity Framework.","Facebook Security Guidelines","Microsoft Office Security Model","Google Safe Browsing"],correct:0,anchor:"The NIST Cybersecurity Framework is the most widely used standard for managing and reducing cybersecurity risk."},
+      {q:"What is social engineering in cyber-intelligence?",opts:["A method to manipulate people into revealing confidential information","A way to improve website SEO rankings","A cybersecurity hardware component","A type of network firewall"],correct:0,anchor:"Social engineering manipulates human psychology — the attacker's most effective tool against technical defenses."},
+      {q:"What does MFA stand for in cybersecurity?",opts:["Multi-Factor Authentication.","Machine Firewall Application","Malware-Free Access","Managed File Analysis"],correct:0,anchor:"MFA = Multi-Factor Authentication — combining multiple verification factors for stronger identity verification."},
+      {q:"Which type of malware encrypts files and demands payment to restore access?",opts:["Ransomware.","Adware","Spyware","Rootkit"],correct:0,anchor:"Ransomware encrypts files and demands ransom payment — the dominant threat to organizations today."},
+      {q:"What is the primary objective of cyber threat intelligence sharing?",opts:["Enhancing collaboration between organizations to prevent cyber-threats","Selling security information for profit","Increasing website traffic","Blocking all access to cybersecurity resources"],correct:0,anchor:"Threat intel sharing enhances collaboration — collective defense against shared adversaries."},
+      {q:"Which cryptographic method uses a pair of keys for encryption and decryption?",opts:["Asymmetric encryption.","Symmetric encryption","Hashing","Steganography"],correct:0,anchor:"Asymmetric encryption uses a key pair: public key (encrypt) + private key (decrypt). Used in TLS, SSH."},
+      {q:"What is a firewall used for in cybersecurity?",opts:["Filtering incoming and outgoing network traffic","Enhancing computer graphics","Storing cryptographic keys","Managing software updates"],correct:0,anchor:"Firewalls filter network traffic — allowing legitimate traffic while blocking potentially malicious connections."},
+      {q:"What is the primary function of an Intrusion Detection System (IDS)?",opts:["Monitoring network traffic for suspicious activity","Blocking all incoming traffic","Encrypting user data","Improving website performance"],correct:0,anchor:"IDS monitors network traffic — detecting suspicious patterns that indicate intrusion attempts."},
+      {q:"What is phishing?",opts:["A cyber-attack that tricks individuals into providing sensitive information","A network security protocol","A method for encrypting email communications","A cybersecurity job title"],correct:0,anchor:"Phishing tricks individuals into providing sensitive information through deceptive emails or websites."},
+      {q:"What is the role of a Security Operations Center (SOC)?",opts:["Monitoring and responding to cybersecurity incidents","Managing social media accounts","Designing computer hardware","Selling cybersecurity software"],correct:0,anchor:"SOC = the nerve center of cybersecurity operations — 24/7 monitoring and incident response."},
+      {q:"Which protocol is used for secure communication over the internet?",opts:["HTTPS.","HTTP","FTP","SMTP"],correct:0,anchor:"HTTPS uses TLS/SSL encryption — securing data in transit between browsers and web servers."},
+      {q:"What is penetration testing?",opts:["Simulating cyber-attacks to identify security vulnerabilities","A process to speed up network connections","A method for filtering spam emails","A way to reset user passwords"],correct:0,anchor:"Penetration testing simulates real attacks — finding vulnerabilities before malicious actors can exploit them."},
+      {q:"Which organization is responsible for global cybersecurity standards?",opts:["International Organization for Standardization (ISO)","Facebook","Apple Inc","Twitter"],correct:0,anchor:"ISO publishes international cybersecurity standards — including ISO 27001 for information security management."},
+      {q:"What is the function of an antivirus program?",opts:["Detecting and removing malware from a system","Increasing battery life of a laptop","Enhancing graphics performance","Managing cloud storage"],correct:0,anchor:"Antivirus detects and removes malware — scanning for known signatures and behavioral patterns of malicious code."},
+      {q:"What is an SQL injection attack?",opts:["A cyber-attack that manipulates a database query to gain unauthorized access","A method of encrypting SQL databases","A programming language for cyber-intelligence","A process to filter website traffic"],correct:0,anchor:"SQL injection manipulates database queries — inserting malicious SQL code to bypass authentication or extract data."},
+      {q:"What does DDoS stand for?",opts:["Distributed Denial of Service.","Data Driven Operating System","Digital Defense of Systems","Dynamic Data on Security"],correct:0,anchor:"DDoS = Distributed Denial of Service — overwhelming a target with traffic from many sources to disrupt access."},
+      {q:"What is a honeypot in cybersecurity?",opts:["A security system designed to lure cyber-attackers","A backup server for storing encryption keys","A tool for managing cloud storage","A device that strengthens Wi-Fi signals"],correct:0,anchor:"A honeypot lures attackers into a decoy system — revealing their tools, techniques, and objectives."},
+      {q:"What is an insider threat in cybersecurity?",opts:["A security risk that comes from within an organization","A cyber-attack from external hackers","A newly developed encryption method","A network firewall update"],correct:0,anchor:"Insider threats originate from within — employees, contractors, or partners with authorized access who misuse it."},
+      {q:"What is cyber-espionage?",opts:["The use of hacking techniques to gather intelligence from adversaries","The study of cybersecurity history","A new form of ransomware","A technique used in social media marketing"],correct:0,anchor:"Cyber-espionage uses hacking to gather intelligence — targeting governments, corporations, and military organizations."},
+      {q:"What is threat modeling in cybersecurity?",opts:["A process to identify, evaluate, and mitigate security risks","A technique to increase internet speed","A method to design social media ads","A process to reset user passwords"],correct:0,anchor:"Threat modeling systematically identifies, evaluates, and mitigates security risks — a proactive security design process."},
+      {q:"Which of the following are considered cyber-threat actors?",opts:["Cybercriminals","Nation-state hackers.","Insider threats.","All of them."],correct:3,anchor:"All three — cybercriminals, nation-state hackers, and insider threats — are primary cyber threat actor categories."},
+      {q:"Which of the following are ethical concerns in cyber-intelligence?",opts:["Privacy violations","Bias in AI models.","Government surveillance overreach.","All of them."],correct:3,anchor:"All three ethical concerns are real: privacy violations, AI bias, and surveillance overreach."},
+      {q:"Which of the following technologies is expected to impact cyber-intelligence?",opts:["AI and machine learning","Quantum computing.","Blockchain.","All of them."],correct:3,anchor:"AI/ML, quantum computing, and blockchain will each transform cyber intelligence capabilities."}
+    ]
+  },
+  {
+    name: "Lecture 10 — Advanced Threats & Cyber Operations",
+    questions: [
+      {q:"What is cyber-threat intelligence used for?",opts:["Managing social media campaigns","Identifying, preventing, and responding to cyber threats","Developing video games","Enhancing website aesthetics"],correct:1,anchor:"Cyber-threat intelligence: identify, prevent, and respond to cyber threats — the complete intelligence cycle."},
+      {q:"What is the purpose of risk assessment in cybersecurity?",opts:["Enhancing video quality","Evaluating potential vulnerabilities and threats","Designing social media ads","Increasing internet speed"],correct:1,anchor:"Risk assessment evaluates vulnerabilities and threats — quantifying risk to prioritize security investments."},
+      {q:"What does UEBA stand for?",opts:["User Email Behavior Analysis","User and Entity Behavior Analytics.","Universal Enterprise Blockchain Application","Unified Encryption and Backup Algorithm"],correct:1,anchor:"UEBA = User and Entity Behavior Analytics — detecting anomalies in user and system behavior patterns."},
+      {q:"What is a rootkit?",opts:["A type of malicious software that allows unauthorized access to a system","A secure VPN application","A firewall upgrade","A cybersecurity training program"],correct:0,anchor:"A rootkit provides persistent unauthorized access while hiding its presence — extremely difficult to detect and remove."},
+      {q:"What is cyber-hygiene?",opts:["A cybersecurity certification program","Best practices for maintaining good cybersecurity habits","A process for resetting internet routers","A method for cleaning computer screens"],correct:1,anchor:"Cyber-hygiene = best practices (updates, strong passwords, backups) for maintaining good cybersecurity health."},
+      {q:"What is a cybersecurity incident response plan?",opts:["A predefined approach to handling security breaches","A strategy for selling cybersecurity services","A guide to setting up Wi-Fi networks","A document for increasing website traffic"],correct:0,anchor:"An incident response plan is a predefined playbook — ensuring rapid, organized response to security breaches."},
+      {q:"What is ethical hacking?",opts:["Developing social media marketing strategies","Legally testing systems for vulnerabilities.","Installing unauthorized software","Hacking government systems for personal gain"],correct:1,anchor:"Ethical hacking (penetration testing) legally tests systems for vulnerabilities — authorized security assessment."},
+      {q:"What is threat intelligence fusion?",opts:["Enhancing website design","Strengthening internet connectivity","Creating new malware","Combining multiple sources of threat data for a comprehensive analysis"],correct:3,anchor:"Threat intelligence fusion combines multiple data sources — OSINT, SIGINT, HUMINT — for comprehensive analysis."},
+      {q:"What is spear phishing?",opts:["A broad spam email campaign","A targeted phishing attack aimed at a specific individual or organization","A cybersecurity research tool","A method for securing Wi-Fi networks"],correct:1,anchor:"Spear phishing targets specific individuals with personalized deception — much more effective than mass phishing."},
+      {q:"What is an air-gapped system?",opts:["A computer or network that is physically isolated from external connections","A cybersecurity training program","A type of antivirus software","A cloud storage service"],correct:0,anchor:"Air-gapped systems have no physical or wireless connections to external networks — the most secure isolation method."},
+      {q:"What is endpoint security?",opts:["Increasing smartphone battery life","Enhancing email marketing campaigns","Protecting individual devices from cyber-threats","Managing social media posts"],correct:2,anchor:"Endpoint security protects individual devices (laptops, phones, servers) — each is a potential attack entry point."},
+      {q:"What is an exploit kit?",opts:["A toolkit used by cybercriminals to exploit system vulnerabilities","A collection of cybersecurity awareness materials","A hardware tool for securing networks","A software for fixing cybersecurity issues"],correct:0,anchor:"Exploit kits are attacker toolkits — automated packages that probe for and exploit known vulnerabilities."},
+      {q:"What is cyber-resilience?",opts:["A type of encryption","A method for improving website performance","The ability of an organization to withstand cyber-threats","A cybersecurity certification"],correct:2,anchor:"Cyber-resilience is the ability to withstand, adapt to, and recover from cyber attacks — beyond just prevention."},
+      {q:"What is dark web monitoring?",opts:["Tracking cybercriminal activities on hidden networks","Managing social media profiles","Enhancing website visibility on search engines","Analyzing legal online marketplaces"],correct:0,anchor:"Dark web monitoring tracks criminal activities on hidden networks — detecting stolen data and emerging threats."},
+      {q:"What is a supply chain attack?",opts:["A cyber-attack targeting third-party vendors to compromise an organization","A cybersecurity awareness campaign","A software bug that affects only large corporations","A phishing attempt on individual users"],correct:0,anchor:"Supply chain attacks compromise third-party vendors — infiltrating target organizations through trusted suppliers."},
+      {q:"What is whaling in cybersecurity?",opts:["A cybersecurity training exercise","A phishing attack targeting high-profile individuals or executives","A technique for blocking malware","A method for encrypting sensitive data"],correct:1,anchor:"Whaling targets 'big fish' — executives and high-profile individuals — for maximum impact phishing attacks."},
+      {q:"What is a zero-day vulnerability?",opts:["A minor glitch in a website\u2019s UI","A software flaw that is unknown to the vendor and exploited by attackers","A new cybersecurity training method","A security update for known vulnerabilities"],correct:1,anchor:"Zero-day = unknown to the vendor — attackers exploit it before a patch exists, making it extremely dangerous."},
+      {q:"What is the purpose of a VPN in cybersecurity?",opts:["Blocking all internet access","Storing personal passwords","Encrypting internet traffic to enhance privacy and security","Increasing Wi-Fi speed"],correct:2,anchor:"VPN encrypts internet traffic — creating a secure tunnel that protects data from interception."},
+      {q:"What is the role of Artificial Intelligence (AI) in cybersecurity?",opts:["Increasing website loading speed","Developing social media algorithms","Automating threat detection and response.","Managing graphic design tasks"],correct:2,anchor:"AI automates threat detection and response — processing security events at scale and speed."},
+      {q:"What is cloud security?",opts:["Enhancing weather prediction models","Blocking social media advertisements","Increasing cloud storage capacity","Protecting data stored in cloud environments"],correct:3,anchor:"Cloud security protects data stored in cloud environments — addressing unique risks of shared infrastructure."},
+      {q:"What is the primary purpose of threat intelligence platforms (TIPs)?",opts:["Enhancing video streaming quality","Aggregating and analyzing threat data.","Increasing internet bandwidth","Managing social media content"],correct:1,anchor:"TIPs aggregate and analyze threat data — centralizing intelligence from multiple feeds for actionable insights."},
+      {q:"What is cyber-deception technology used for?",opts:["Speeding up website load times","Misleading attackers to detect and study their behavior","Increasing computer performance","Hiding social media accounts"],correct:1,anchor:"Cyber deception technology misleads attackers — creating fake assets (honeypots, decoys) to detect and study them."},
+      {q:"What is the primary goal of a Security Information and Event Management (SIEM) system?",opts:["Managing cloud storage","Filtering spam emails","Collecting and analyzing security-related data from multiple sources","Enhancing computer graphics"],correct:2,anchor:"SIEM collects and analyzes security data from across the environment — detecting threats through correlation."},
+      {q:"What is an Advanced Persistent Threat (APT)?",opts:["A method for encrypting emails","A new internet connectivity standard","A prolonged and targeted cyber-attack by a sophisticated adversary","A short-lived software bug"],correct:2,anchor:"APT = prolonged, targeted attack by sophisticated adversary — stealth, persistence, and specific objectives."},
+      {q:"What is the primary function of a cybersecurity audit?",opts:["Designing social media advertisements","Speeding up internet connections","Evaluating and improving security controls","Enhancing gaming performance"],correct:2,anchor:"Cybersecurity audits evaluate security controls — identifying weaknesses and ensuring compliance."},
+      {q:"What is the importance of penetration testing?",opts:["Identifying vulnerabilities before cybercriminals exploit them","Managing social media posts","Filtering website traffic","Increasing computer storage capacity"],correct:0,anchor:"Penetration testing finds vulnerabilities first — giving defenders the opportunity to fix them before attackers exploit them."},
+      {q:"What is the role of security orchestration, automation, and response (SOAR) in cybersecurity?",opts:["Designing web pages","Creating video game security patches","Automating and coordinating security operations","Enhancing mobile app usability"],correct:2,anchor:"SOAR automates and coordinates security operations — integrating tools and workflows for faster incident response."},
+      {q:"What is the purpose of a cyber-threat intelligence feed?",opts:["Filtering email spam","Managing cryptocurrency transactions","Providing real-time data on emerging threats","Improving online video quality"],correct:2,anchor:"Threat intelligence feeds provide real-time data on emerging threats — continuously updating defenders on new risks."},
+      {q:"What is malware sandboxing used for?",opts:["Isolating suspicious files in a secure environment for analysis","Organizing cybersecurity training","Encrypting network traffic","Speeding up file downloads"],correct:0,anchor:"Malware sandboxing isolates suspicious files — executing them in a safe environment to observe their behavior."},
+      {q:"What is a cyber-threat actor?",opts:["An individual or group responsible for cyber attacks","A computer program for detecting malware","A security software update","A method of encrypting emails"],correct:0,anchor:"A cyber-threat actor is an individual or group that carries out cyber attacks — from nation-states to lone hackers."},
+      {q:"What is a watering hole attack?",opts:["A technique for improving internet connectivity","A new social engineering method","A strategy to enhance cybersecurity training","A cyber-attack targeting frequently visited websites to compromise users"],correct:3,anchor:"Watering hole attacks compromise websites that targets frequently visit — infecting visitors through trusted sites."},
+      {q:"What is the function of network segmentation in cybersecurity?",opts:["Isolating critical systems to reduce the impact of cyber attacks","Enhancing website performance","Filtering email traffic","Increasing internet speed"],correct:0,anchor:"Network segmentation isolates critical systems — containing breaches and preventing lateral movement."},
+      {q:"What is digital forensics?",opts:["A type of cybersecurity firewall","A method for increasing cloud storage capacity","The process of collecting and analyzing digital evidence","A social media management tool"],correct:2,anchor:"Digital forensics collects and analyzes digital evidence — supporting incident investigation and legal proceedings."},
+      {q:"What is identity and access management (IAM)?",opts:["A framework for ensuring secure and controlled access to resources","A strategy for social media engagement","A technique for analyzing cybersecurity trends","A type of email encryption"],correct:0,anchor:"IAM ensures only authorized users can access specific resources — the foundation of access control."},
+      {q:"What is the purpose of security awareness training?",opts:["Educating employees on cybersecurity risks and best practices","Enhancing mobile device security updates","Managing website analytics","Increasing Wi-Fi signal strength"],correct:0,anchor:"Security awareness training educates employees — reducing human error, the most exploited attack vector."},
+      {q:"What is insider threat detection?",opts:["Blocking external hacking attempts","Managing user passwords","Identifying security risks originating from within an organization","Enhancing email encryption"],correct:2,anchor:"Insider threat detection identifies risks from within — employees, contractors misusing their authorized access."},
+      {q:"What is a cyber-incident response team (CIRT)?",opts:["A group of security professionals who handle and mitigate cyber-incidents","A tool for improving internet speed","A team managing cloud storage","A cybersecurity software update"],correct:0,anchor:"CIRT is a specialized team — security professionals who respond to, manage, and mitigate cyber incidents."},
+      {q:"What is the goal of security log management?",opts:["Managing social media interactions","Increasing website traffic","Collecting and analyzing logs for detecting security incidents","Enhancing cloud storage"],correct:2,anchor:"Security log management collects and analyzes logs — the audit trail for detecting and investigating incidents."},
+      {q:"What is phishing awareness training?",opts:["Managing financial transactions","Enhancing email marketing strategies","Educating users on identifying and avoiding phishing attacks","Increasing website visibility"],correct:2,anchor:"Phishing awareness training teaches users to recognize phishing — reducing click rates on malicious links."},
+      {q:"What is cyber-risk management?",opts:["Improving website engagement metrics","Developing mobile security applications","Managing cloud data backup","The process of identifying, assessing, and mitigating cybersecurity risks"],correct:3,anchor:"Cyber-risk management identifies, assesses, and mitigates risks — a continuous process of risk reduction."},
+      {q:"What is cyber-threat hunting?",opts:["Proactively searching for cyber-threats before they cause harm","Filtering spam emails","Developing social media content","Creating antivirus software"],correct:0,anchor:"Cyber-threat hunting proactively searches for hidden threats — finding what automated tools missed."},
+      {q:"What is the purpose of a bug bounty program?",opts:["Managing cloud storage","Increasing website engagement","Encouraging ethical hackers to find vulnerabilities in exchange for rewards","Selling cybersecurity software"],correct:2,anchor:"Bug bounty programs incentivize ethical hackers — rewarding them for responsibly disclosing vulnerabilities."},
+      {q:"What is quantum cryptography used for?",opts:["Increasing internet speed","Ensuring highly secure encryption using quantum mechanics","Managing cybersecurity software licenses","Enhancing Wi-Fi connectivity"],correct:1,anchor:"Quantum cryptography uses quantum mechanics principles — providing theoretically unbreakable encryption."},
+      {q:"What is an intrusion prevention system (IPS)?",opts:["A security tool that detects and prevents cyber-threats","A social engineering attack","A website optimization technique","A method for encrypting passwords"],correct:0,anchor:"IPS detects AND prevents cyber threats — unlike IDS (detect only), IPS actively blocks malicious traffic."},
+      {q:"What is the role of artificial intelligence (AI) in cyber-defense?",opts:["Automating threat detection and response.","Increasing website traffic","Designing social media campaigns","Managing online advertisements"],correct:0,anchor:"AI in cyber-defense automates threat detection and response — the force multiplier for security teams."},
+      {q:"What is ransomware-as-a-service (RaaS)?",opts:["A legitimate data backup service","A cybersecurity tool for blocking ransomware","A criminal business model where ransomware tools are sold to attackers","A government cybersecurity initiative"],correct:2,anchor:"RaaS is a criminal business model — developers sell ransomware kits to other criminals, lowering barriers to entry."},
+      {q:"What is a cyber-kill chain?",opts:["A technique for improving cloud storage efficiency","A type of cybersecurity firewall","A method for protecting social media accounts","A framework that outlines the stages of a cyber-attack"],correct:3,anchor:"The cyber kill chain outlines attack stages — from reconnaissance to actions on objectives — enabling stage-by-stage defense."},
+      {q:"What is a brute force attack?",opts:["A technique for optimizing computer performance","A method where attackers try all possible password combinations to gain access","A cybersecurity strategy for strengthening networks","A phishing scam targeting executives"],correct:1,anchor:"Brute force attacks systematically try all password combinations — defeated by strong, complex passwords and account lockouts."},
+      {q:"What is multi-factor authentication (MFA)?",opts:["A technique for encrypting emails","A software update for improving cybersecurity tools","A security process requiring multiple verification methods for access","A new social engineering attack"],correct:2,anchor:"MFA requires multiple verification methods — something you know, have, and/or are — for stronger authentication."},
+      {q:"What is a cryptographic hash function used for?",opts:["Improving internet speed","Verifying data integrity.","Increasing file storage capacity","Enhancing email marketing strategies"],correct:1,anchor:"Cryptographic hash functions verify data integrity — producing a unique fingerprint that changes if data is altered."}
+    ]
+  }
+];
+
+/* ── STATE ── */
+let activeQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let answered = 0;
+let autoTimer = null;
+let selectedChapters = new Set();
+
+const LETTERS = ['A','B','C','D','E'];
+
+/* ── BUILD CHAPTER SELECT ── */
+function buildChapterSelect() {
+  const grid = document.getElementById('chapterGrid');
+  CHAPTERS.forEach((ch, i) => {
+    const card = document.createElement('div');
+    card.className = 'ch-card';
+    card.dataset.idx = i;
+    const subtitle = ch.name.split('—')[1]?.trim() || ch.name;
+    card.innerHTML = `
+      <div class="ch-num">LECTURE ${i+1}</div>
+      <div class="ch-title">${subtitle}</div>
+      <div class="ch-count">${ch.questions.length} questions</div>
+    `;
+    card.onclick = () => toggleChapter(i, card);
+    grid.appendChild(card);
+  });
+}
+
+function toggleChapter(idx, card) {
+  if (selectedChapters.has(idx)) {
+    selectedChapters.delete(idx);
+    card.classList.remove('selected');
+  } else {
+    selectedChapters.add(idx);
+    card.classList.add('selected');
+  }
+}
+
+function startQuiz(mode) {
+  let pool = [];
+  if (mode === 'all') {
+    CHAPTERS.forEach(ch => pool.push(...ch.questions.map(q => ({...q, chapter: ch.name}))));
+  } else {
+    if (selectedChapters.size === 0) {
+      CHAPTERS.forEach(ch => pool.push(...ch.questions.map(q => ({...q, chapter: ch.name}))));
+    } else {
+      selectedChapters.forEach(i => {
+        CHAPTERS[i].questions.forEach(q => pool.push({...q, chapter: CHAPTERS[i].name}));
+      });
+    }
+  }
+  activeQuestions = pool.sort(() => Math.random() - 0.5);
+  currentIndex = 0; score = 0; answered = 0;
+  document.getElementById('chapter-select').style.display = 'none';
+  document.getElementById('progressWrap').style.display   = 'flex';
+  document.getElementById('quizArea').style.display       = 'block';
+  document.getElementById('results').style.display        = 'none';
+  renderQuestion();
+}
+
+/* ── RENDER ── */
+function renderQuestion() {
+  if (currentIndex >= activeQuestions.length) { showResults(); return; }
+  const q = activeQuestions[currentIndex];
+  const total = activeQuestions.length;
+
+  document.getElementById('progressLabel').textContent = `Question ${currentIndex+1} of ${total}`;
+  document.getElementById('scoreLive').textContent     = `Score: ${score}`;
+  document.getElementById('barFill').style.width       = `${(currentIndex/total)*100}%`;
+  document.getElementById('chapterBadge').textContent  = q.chapter || '';
+  document.getElementById('qNumber').textContent       = `Q${currentIndex+1}`;
+  document.getElementById('qText').textContent         = q.q;
+
+  const anchor = document.getElementById('anchor');
+  anchor.style.display = 'none';
+  document.getElementById('anchorText').textContent = q.anchor || '';
+
+  const tb = document.getElementById('timerBar');
+  tb.style.transition = 'none';
+  tb.style.width = '0%';
+
+  const shuffled = q.opts.map((_,i) => i).sort(() => Math.random() - 0.5);
+  const optContainer = document.getElementById('options');
+  optContainer.innerHTML = '';
+
+  shuffled.forEach((origIdx, displayPos) => {
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.dataset.origIdx = origIdx;
+    div.dataset.correct = (origIdx === q.correct) ? 'true' : 'false';
+    div.innerHTML = `
+      <div class="opt-label">${LETTERS[displayPos]}</div>
+      <div class="opt-text">${q.opts[origIdx]}</div>
+      <div class="opt-icon">${origIdx === q.correct ? '✓' : '✗'}</div>
+    `;
+    div.onclick = () => handleAnswer(div);
+    optContainer.appendChild(div);
+  });
+
+  const card = document.getElementById('card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeSlideIn .35s ease both';
+}
+
+/* ── ANSWER ── */
+function handleAnswer(clickedDiv) {
+  document.querySelectorAll('.opt').forEach(o => o.classList.add('locked'));
+  const isCorrect = clickedDiv.dataset.correct === 'true';
+  if (isCorrect) {
+    score++;
+    clickedDiv.classList.add('correct');
+  } else {
+    clickedDiv.classList.add('wrong');
+    document.querySelectorAll('.opt').forEach(o => {
+      if (o.dataset.correct === 'true') o.classList.add('correct');
+    });
+  }
+  answered++;
+  document.getElementById('anchor').style.display = 'block';
+
+  const tb = document.getElementById('timerBar');
+  requestAnimationFrame(() => {
+    tb.style.transition = 'width 1.7s linear';
+    tb.style.width = '100%';
+  });
+
+  clearTimeout(autoTimer);
+  autoTimer = setTimeout(() => { currentIndex++; renderQuestion(); }, 1850);
+}
+
+/* ── RESULTS ── */
+function showResults() {
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('quizArea').style.display     = 'none';
+  const r = document.getElementById('results');
+  r.style.display = 'block';
+
+  const pct = Math.round((score / activeQuestions.length) * 100);
+  document.getElementById('scorePercent').textContent = pct;
+  document.getElementById('statCorrect').textContent  = score;
+  document.getElementById('statWrong').textContent    = activeQuestions.length - score;
+  document.getElementById('statTotal').textContent    = activeQuestions.length;
+
+  let grade, trophy;
+  if (pct >= 90)      { grade='Outstanding! 🔥 A+'; trophy='🏆'; }
+  else if (pct >= 80) { grade='Excellent work! A';   trophy='🥇'; }
+  else if (pct >= 70) { grade='Good job! B';          trophy='🎯'; }
+  else if (pct >= 60) { grade='Passing grade. C';     trophy='📚'; }
+  else                { grade='Keep studying! 💪';    trophy='🔄'; }
+
+  document.getElementById('trophy').textContent       = trophy;
+  document.getElementById('resultsTitle').textContent = grade;
+  document.getElementById('resultsGrade').textContent = `You answered ${score} of ${activeQuestions.length} questions correctly.`;
+}
+
+function resetToMenu() {
+  document.getElementById('results').style.display        = 'none';
+  document.getElementById('chapter-select').style.display = 'block';
+  selectedChapters.clear();
+  document.querySelectorAll('.ch-card').forEach(c => c.classList.remove('selected'));
+}
+
+buildChapterSelect();
+</script>
+</body>
+</html>
